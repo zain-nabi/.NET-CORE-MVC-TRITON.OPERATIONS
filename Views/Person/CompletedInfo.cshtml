@@ -1,0 +1,89 @@
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+@model Triton.Model.LeaveManagement.Custom.QuestionnaireModel
+
+@{
+    ViewData["Title"] = "CompletedInfo";
+    ViewData["Header"] = "Completed";
+    ViewData["HeaderBold"] = "screening";
+    ViewData["Description"] = "Information for screening";
+    var template = $"{Configuration.GetSection("URL").GetSection("template").Value}";
+    var temperature = $"{Configuration.GetSection("Corvid-19").GetSection("temperature").Value}";
+}
+
+<div class="container space-5">
+    @*<h3 class="mb-4">@Model.Employee.LeaveDisplayName</h3>*@
+    <div class="row">
+        @if (Model.Employee != null)
+        {
+            <div class="col-lg-2 mb-4 mb-lg-0">
+                <div class="avatar avatar-xl avatar-circle mb-3">
+                    <figure class="max-w-8rem mx-auto">
+                        <img class="img-fluid" src="@template/assets/svg/icons/icon-46.svg" alt="SVG">
+                    </figure>
+                </div>
+
+                <!-- Icon Block -->
+                <div class="media text-body font-size-1 mb-2">
+                    <div class="min-w-3rem text-center mr-2">
+                        <i class="fad fa-user"></i>
+                    </div>
+                    <div class="media-body">
+                        @Model.Employee.FullNames
+                    </div>
+                </div>
+                <!-- End Icon Block -->
+                <!-- Icon Block -->
+                <div class="media text-body font-size-1 mb-2">
+                    <div class="min-w-3rem text-center mr-2">
+                        <i class="fad fa-house-user"></i>
+                    </div>
+                    <div class="media-body">
+                        @Model.Employee.Surname
+                    </div>
+                </div>
+                <!-- End Icon Block -->
+                <!-- Icon Block -->
+                <div class="media text-body font-size-1 mb-2">
+                    <div class="min-w-3rem text-center mr-2">
+                        <i class="fad fa-passport"></i>
+                    </div>
+                    <div class="media-body">
+                        @Model.Employee.SAID
+                    </div>
+                </div>
+                <!-- End Icon Block -->
+            </div>
+        }
+        <div class="col-lg-10">
+            @foreach (var item in Model.QuestionsandAnswers)
+            {
+                //var icon = "fa-check-circle text-success";
+                if (item.Answer.Response == "Yes")
+                {
+                    //icon = "fa-times-circle text-danger";
+                }
+
+                <div class="row">
+                    <label class="col-sm-10 col-form-label">
+                        @if (item.Question.QuestionCategoryLCId == 397)
+                        {
+                            <i class="fad fa-circle"></i>
+                        }
+                        @item.Question.QuestionText</label>
+                    <div class="col-sm-2 col-form-label">
+                        @if (item.Answer.QuestionId == 5 && decimal.Parse(item.Answer.Response) > decimal.Parse(temperature))
+                        {
+                            <label class="badge badge-danger">@item.Answer.Response</label>
+                        }
+                        else
+                        {
+                            <label class="@(item.Answer.Response == "Yes" ? "badge badge-danger" : "text-muted")">@item.Answer.Response</label>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,307 @@
+﻿@model Triton.Operations.Models.RoadFreightAgentViewModel;
+@{
+    var assignedRole = User.IsInRole("Branch Manager");
+    var roadFreightAgentId = @Model.proc_RoadFreightAgent_GetByID.RoadFreightAgent.RoadFreightAgentID;
+    var selectedDate = @Model.FilterDate;
+
+}
+
+
+<main id="content" role="main" class="main">
+    <!-- Content -->
+    <form class="js-validate" method="post" asp-action="UpdateRoadFreightAgent" asp-controller="RoadFreightAgent" id="frmPurchaseOrder">
+
+        <div class="content container-fluid">
+            <div class="page-header">
+                <div class="row align-items-center mb-3">
+                    <div class="col-sm mb-2 mb-sm-0">
+                        <h1 class="page-header-title">Overview - <span class="badge badge-soft-dark ml-2">@(Model.LookUpCodes == null ? "N/A" : Model.LookUpCodes.Name)</span></h1>
+                    </div>
+                </div>
+                <!-- End Row -->
+                <!-- Nav Scroller -->
+                <div class="js-nav-scroller hs-nav-scroller-horizontal">
+                    <span class="hs-nav-scroller-arrow-prev" style="display: none;">
+                        <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+                            <i class="tio-chevron-left"></i>
+                        </a>
+                    </span>
+
+                    <span class="hs-nav-scroller-arrow-next" style="display: none;">
+                        <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+                            <i class="tio-chevron-right"></i>
+                        </a>
+                    </span>
+
+                    <!-- Nav -->
+                    <ul class="nav nav-tabs page-header-tabs" id="pageHeaderTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#">Summary</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("GetById", "RoadFreightAgentHistory", new { roadFreightAgentId = roadFreightAgentId, filterDate = Model.FilterDate })">Audit</a>
+                        </li>
+                    </ul>
+                    <!-- End Nav -->
+                </div>
+                <!-- End Nav Scroller -->
+            </div>
+        </div>
+
+        <div class="content container-fluid my-n9">
+            @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong>
+                        @Model.ErrorMessage
+
+                    </strong>
+                </div>
+            }
+            @if (User.IsInRole("Branch Manager") && @Model.proc_RoadFreightAgent_GetByID.Category.Name == "Paid")
+            {
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <strong>
+                       
+                            You cannot edit this waybill.
+                            Please contact Creditor's Department.
+                       
+                    </strong>
+
+                </div>
+            }
+            <div class="js-nav-scroller hs-nav-scroller-horizontal mb-5">
+                <span class="hs-nav-scroller-arrow-prev" style="display: none;">
+                    <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+                        <i class="tio-chevron-left"></i>
+                    </a>
+                </span>
+
+                <span class="hs-nav-scroller-arrow-next" style="display: none;">
+                    <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+                        <i class="tio-chevron-right"></i>
+                    </a>
+                </span>
+            </div>
+
+            <div class="row gx-2 gx-lg-3">
+
+                <div class="col-lg-6">
+                    <!-- Card -->
+                    <div class="card h-100">
+                        <!-- Header -->
+                        <div class="card-header">
+                            <h5 class="card-header-title">Update</h5>
+                        </div>
+                        <!-- End Header -->
+                        <!-- Body -->
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <!-- Form Group -->
+                                    <div class="form-group js-form-message">
+                                        <label for="PostalCodeLabel" class="input-label">Waybill No</label>
+                                        @Html.TextBoxFor(model => model.proc_RoadFreightAgent_GetByID.RoadFreightAgent.WaybillNo, new { id = "WaybillNo", @class = "form-control stringValidation", @required = "required", maxlength = "255", @name = "WaybillNo" })
+                                    </div>
+                                    <!-- End Form Group -->
+                                </div>
+                                <div class="col-sm-6">
+
+                                    <div class="form-group js-form-message">
+                                        <label class="input-label">Volumetric</label>
+                                        @Html.TextBoxFor(model => model.proc_RoadFreightAgent_GetByID.RoadFreightAgent.Volumetric, new { id = "VolumetricTextBox", @class = "form-control stringValidation", maxlength = "255", @name = "Volumetric" })
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <!-- Form Group -->
+                                    <div class="form-group js-form-message">
+                                        <label for="MassLabel" class="input-label">Mass</label>
+                                        @Html.TextBoxFor(model => model.proc_RoadFreightAgent_GetByID.RoadFreightAgent.Mass, new { id = "MassTextBox", @class = "form-control stringValidation", @name = "Mass" })
+                                    </div>
+                                    <!-- End Form Group -->
+                                </div>
+                                <div class="col-sm-6">
+
+                                    <div class="form-group js-form-message">
+                                        <label for="Surcharge" class="input-label">Surcharge</label>
+                                        @Html.TextBoxFor(model => model.proc_RoadFreightAgent_GetByID.RoadFreightAgent.Surcharge, new { id = "SurchargeTextBox", @class = "form-control stringValidation", @name = "Surcharge" })
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group js-form-message">
+                                        <label for="SubtotalLabel" class="input-label">Subtotal</label>
+                                        @Html.TextBoxFor(model => model.proc_RoadFreightAgent_GetByID.RoadFreightAgent.Subtotal, new { id = "SubtotalTextBox", @class = "form-control stringValidation", @name = "Subtotal" })
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+
+                                    <div class="form-group js-form-message">
+                                        <label class="input-label">Vat</label>
+                                        @Html.TextBoxFor(model => model.proc_RoadFreightAgent_GetByID.RoadFreightAgent.Vat, new { id = "VatTextBox", @class = "form-control stringValidation", @name = "Vat" })
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col-sm-6">
+                                    <label for="ReasonLabel" class="input-label">Status</label>
+                                    <div>
+                                        @Html.DropDownListFor(m => m.StatusLCID, new SelectList(Model.StatusList, "LookUpCodeID", "Name"), new
+                                                 {
+                                                     @class = "js-select2-custom custom-select",
+                                                     size = "1",
+                                                     style = "opacity: 0;"
+                                                 })
+                                    </div>
+                                    @*<select id="StatusLCID" class="js-select2-custom custom-select" style="opacity: 0;" asp-items="Model.StatusList" asp-for="RoadFreightAgentModel.StatusLCID"
+                                        data-hs-select2-options='{
+                                            "minimumResultsForSearch": "Infinity",
+                                             "placeholder": "Select a status"
+                                            }'>
+                                    <option label="empty"></option>
+                                </select>*@
+                                </div>
+                            </div>
+
+                            <div class="row mt-4">
+
+                                <div class="col-sm-12">
+                                    <div class="form-group js-form-message">
+
+                                        <label for="SubtotalLabel" class="input-label">Comments</label>
+
+                                        <textarea id="@Html.IdFor(m => m.Comments)" name="@Html.NameFor(m => m.Comments)" class="form-control col-sm-12"></textarea>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                        </div>
+                        <!-- End Body -->
+                        <!-- Footer -->
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-end align-content-end">
+                                <a class="btn btn-white " href="@Url.Action("GetAgentIssuesById", "RoadFreightAgent",new {lookUpCodeId = @Model.proc_RoadFreightAgent_GetByID.RoadFreightAgent.CategoryLCID, filterDate = @Model.FilterDate, filterUserId = User.FindFirst("UserID").Value })">Cancel</a>
+                                @if (User.IsInRole("Branch Manager") && @Model.proc_RoadFreightAgent_GetByID.Category.Name != "Paid")
+                                {
+                                    <input type="submit" value="Save" class="btn btn-primary ml-2" id="btnSave" />
+                                }
+                                else if (User.IsInRole("Administrator"))
+                                {
+                                    <input type="submit" value="Save" class="btn btn-primary ml-2" id="btnSave" />
+                                }
+
+                            </div>
+                        </div>
+
+                        <!-- End Footer -->
+                        @Html.HiddenFor(model => model.proc_RoadFreightAgent_GetByID.RoadFreightAgent.RoadFreightAgentID)
+                        @Html.HiddenFor(model => model.FilterDate)
+                        @Html.HiddenFor(model => model.proc_RoadFreightAgent_GetByID.RoadFreightAgent.CategoryLCID)
+                        @Html.HiddenFor(model => model.proc_RoadFreightAgent_GetByID.RoadFreightAgent.CreatedByUserID)
+                        @Html.HiddenFor(model => model.proc_RoadFreightAgent_GetByID.RoadFreightAgent.CreatedOn)
+                        @Html.HiddenFor(model => model.proc_RoadFreightAgent_GetByID.RoadFreightAgent.DeletedByUserID)
+                        @Html.HiddenFor(model => model.proc_RoadFreightAgent_GetByID.RoadFreightAgent.DeletedOn)
+                        @Html.HiddenFor(model => model.proc_RoadFreightAgent_GetByID.RoadFreightAgent.Invoice)
+                        @Html.HiddenFor(model => model.proc_RoadFreightAgent_GetByID.RoadFreightAgent.StatusLCID)
+                        @Html.HiddenFor(model => model.proc_RoadFreightAgent_GetByID.RoadFreightAgent.Subtotal)
+                        @Html.HiddenFor(model => model.proc_RoadFreightAgent_GetByID.RoadFreightAgent.SupplierDate)
+                        @Html.HiddenFor(model => model.proc_RoadFreightAgent_GetByID.RoadFreightAgent.SupplierID)
+                        @Html.HiddenFor(model => model.proc_RoadFreightAgent_GetByID.RoadFreightAgent.Surcharge)
+                        @Html.HiddenFor(model => model.proc_RoadFreightAgent_GetByID.RoadFreightAgent.Total)
+                        @Html.HiddenFor(model => model.proc_RoadFreightAgent_GetByID.RoadFreightAgent.Vat)
+                        @Html.HiddenFor(model => model.proc_RoadFreightAgent_GetByID.RoadFreightAgent.Volumetric)
+                        @Html.HiddenFor(model => model.proc_RoadFreightAgent_GetByID.RoadFreightAgent.WaybillID)
+                        @Html.HiddenFor(model => model.proc_RoadFreightAgent_GetByID.RoadFreightAgent.WaybillNo)
+
+                    </div>
+                    <!-- End Card -->
+                </div>
+
+                <div class="col-lg-6 mb-3 mb-lg-0">
+                    <!-- Card -->
+                    <div class="card h-80">
+                        <!-- Header -->
+                        <div class="card-header">
+                            <h5 class="card-header-title">Information</h5>
+                        </div>
+                        <!-- End Header -->
+                        <!-- Body -->
+                        <div class="card-body">
+
+                            <dl class="row">
+
+
+                                <dt class="col-sm-3 mt-2">Category:</dt>
+                                <dd class="col-sm-9 mt-2">@Model.proc_RoadFreightAgent_GetByID.Category.Name</dd>
+
+                                <dt class="col-sm-3 mt-2">Supplier Date:</dt>
+                                <dd class="col-sm-9 mt-2">@Model.proc_RoadFreightAgent_GetByID.RoadFreightAgent.SupplierDate </dd>
+
+                                <dt class="col-sm-3 mt-2">Supplier Name:</dt>
+                                <dd class="col-sm-9 mt-2">@Model.proc_RoadFreightAgent_GetByID.Supplier.SupplierName</dd>
+
+                                <dt class="col-sm-3 mt-2">Supplier Code:</dt>
+                                <dd class="col-sm-9 mt-2">@Model.proc_RoadFreightAgent_GetByID.Supplier.VendorID</dd>
+
+
+                                <dt class="col-sm-3 mt-2">Freight Total:</dt>
+                                @{
+
+                                    string waybilltotal = (Model.proc_RoadFreightAgent_GetByID.Waybills == null) ? "N/A" : Model.proc_RoadFreightAgent_GetByID.Waybills.ChargeMass.ToString();
+
+                                }
+                                <dd class="col-sm-9 mt-2">@waybilltotal</dd>
+
+                                <dt class="col-sm-3 mt-2">Freight Mass:</dt>
+                                @{
+
+                                    string mass = (Model.proc_RoadFreightAgent_GetByID.Waybills == null) ? "N/A" : Model.proc_RoadFreightAgent_GetByID.Waybills.ChargeMass.ToString();
+
+                                }
+                                <dd class="col-sm-9 mt-2">@mass</dd>
+
+                                <dt class="col-sm-3 mt-2">Created On:</dt>
+                                @{
+                                    var uploadedDate = @Model.proc_RoadFreightAgent_GetByID.RoadFreightAgent.CreatedOn.ToString("dd MMMM yyyy HH:mm:ss");
+                                }
+                                <dd class="col-sm-9 mt-2">@uploadedDate</dd>
+
+                                <dt class="col-sm-3 mt-2">Total Value:  <i class="fal fa-question-circle" data-toggle="tooltip" data-placement="top" title="" data-original-title="Total Value includes VAT."></i></dt>
+                                <dd class="col-sm-9 mt-2">@Model.proc_RoadFreightAgent_GetByID.RoadFreightAgent.Total</dd>
+
+                                <dt class="col-sm-3 mt-2">Charges SubTotal:  <i class="fal fa-question-circle" data-toggle="tooltip" data-placement="top" title="" data-original-title="Charges SubTotal not does include VAT."></i></dt>
+                                <dd class="col-sm-9 mt-2">@Model.proc_RoadFreightAgent_GetByID.RoadFreightAgent.Subtotal</dd>
+                            </dl>
+                        </div>
+                        <!-- End Body -->
+                    </div>
+                    <!-- End Card -->
+                </div>
+            </div>
+        </div>
+    </form>
+</main>
+
+@*@section scripts{
+        <script>
+            $(document).on("click", ".btnSubmit", function () {
+                $('.btnSubmit').submit();
+            });
+                //$(document).ready(function () {
+                //    $('.btnSubmit').submit();
+                //});
+        </script>
+    }*@
+

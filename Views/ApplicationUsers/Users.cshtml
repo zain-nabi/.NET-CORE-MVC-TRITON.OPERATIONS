@@ -1,0 +1,176 @@
+﻿@model Triton.CRM.Models.ApplicationUserModel
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<main id="content" role="main" class="main">
+    <!-- Content -->
+    <div class="content container-fluid">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="row align-items-end">
+                <div class="col-sm mb-2 mb-sm-0">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb breadcrumb-no-gutter">
+                            <li class="breadcrumb-item"><a class="breadcrumb-link" href="javascript:;">Application Users</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Users</li>
+                        </ol>
+                    </nav>
+
+                    <h1 class="page-header-title">Overview</h1>
+                </div>
+            </div>
+        </div>
+        <!-- End Page Header -->
+    </div>
+    <!-- End Breadcrumb Section -->
+    <!-- Content Section -->
+    <div class="content container-fluid my-n9">
+        <div class="card">
+            <!-- Header -->
+            <div class="card-header">
+                <div class="row justify-content-between align-items-center flex-grow-1">
+                    <div class="col-sm-6 col-md-4 mb-3 mb-sm-0">
+                        <form>
+                            <!-- Search -->
+                            <div class="input-group input-group-merge input-group-flush">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <i class="tio-search"></i>
+                                    </div>
+                                </div>
+                                <input id="datatableSearch" type="search" class="form-control" placeholder="Filter results" aria-label="Filter results">
+                            </div>
+                            <!-- End Search -->
+                        </form>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <!--Filter-->
+                    <div>
+                        <div class="col-md">
+                            <a href="@Url.Action("Create", "ApplicationUsers")" class="btn btn-primary">New User</a>
+                        </div>
+                    </div>
+                    <!--End Filter-->
+                </div>
+                <!-- End Row -->
+            </div>
+            <!-- End Header -->
+            <!-- Table -->
+            <div class="table-responsive datatable-custom">
+                <div id="datatable_wrapper" class="dataTables_wrapper">
+                    <table id="datatable" class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table"
+                           data-hs-datatables-options='{
+                     "order": [],
+                     "info": {
+                       "totalQty": "#datatableWithPaginationInfoTotalQty"
+                     },
+                     "search": "#datatableSearch",
+                     "entries": "#datatableEntries",
+                     "pageLength": 8,
+                     "isResponsive": false,
+                     "isShowPaging": false,
+                     "pagination": "datatablePagination"
+                   }'>
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Name</th>
+                                <th>Username</th>
+                                <th>Email Address</th>
+                                <th>Branch</th>
+                                <th>Department</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="font-size-1">
+                            @foreach (var item in Model.UsersList)
+                            {
+                                <tr class="">
+                                    <td class="align-middle">
+                                        <a class="d-flex align-items-center">
+                                            <div class="avatar avatar-soft-primary avatar-circle">
+                                                <span class="avatar-initials">@item.Name.Substring(0, 1)</span>
+                                            </div>
+                                            <div class="ml-3">
+                                                <span class="d-block h5  mb-0">@item.Name</span>
+                                            </div>
+                                        </a>
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="media align-items-center">
+                                            <span>@item.UserName</span>
+                                        </div>
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="media align-items-center">
+                                            <span>@item.EmailAddress</span>
+                                        </div>
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="media align-items-center">
+                                            <span>@item.BranchName</span>
+                                        </div>
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="media align-items-center">
+                                            <span>@item.Department</span>
+                                        </div>
+                                    </td>
+                                    <td class="align-middle">
+                                        <a class="btn btn-sm btn-white" href="@Url.Action("Update", "ApplicationUsers", new { UserID = item.UserID})">
+                                            <i class="tio-receipt-outlined mr-1"></i> Edit
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- End Table -->
+            <!-- Footer -->
+            <div class="card-footer">
+                <!-- Pagination -->
+                <div class="row justify-content-center justify-content-sm-between align-items-sm-center">
+                    <div class="col-sm mb-2 mb-sm-0">
+                        <div class="d-flex justify-content-center justify-content-sm-start align-items-center">
+                            <span class="mr-2">Showing:</span>
+
+                            <!-- Select -->
+                            <select id="datatableEntries" class="js-select2-custom"
+                                    data-hs-select2-options='{
+                            "minimumResultsForSearch": "Infinity",
+                            "customClass": "custom-select custom-select-sm custom-select-borderless",
+                            "dropdownAutoWidth": true,
+                            "width": true
+                          }'>
+                                <option value="4">4</option>
+                                <option value="6">6</option>
+                                <option value="8" selected>8</option>
+                                <option value="12">12</option>
+                            </select>
+                            <!-- End Select -->
+
+                            <span class="text-secondary mr-2">of</span>
+
+                            <!-- Pagination Quantity -->
+                            <span id="datatableWithPaginationInfoTotalQty"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-auto">
+                        <div class="d-flex justify-content-center justify-content-sm-end">
+                            <!-- Pagination -->
+                            <nav id="datatablePagination" aria-label="Activity pagination"></nav>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Pagination -->
+            </div>
+            <!-- End Footer -->
+
+        </div>
+    </div>
+</main>

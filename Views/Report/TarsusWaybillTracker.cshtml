@@ -1,0 +1,92 @@
+﻿@model TarsusWaybillTrackerModel
+
+
+<main id="content" role="main" class="main">
+    <!-- Content -->
+    <div class="content container-fluid">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="row align-items-end">
+                <div class="col-sm mb-2 mb-sm-0">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb breadcrumb-no-gutter">
+                            <li class="breadcrumb-item"><a class="breadcrumb-link" href="javascript:;">Reports</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Tarsus</li>
+                        </ol>
+                    </nav>
+
+                    <h1 class="page-header-title">Tarsus Tracking</h1>
+                </div>
+            </div>
+        </div>
+        <!-- End Page Header -->
+    </div>
+    <div class="content container-fluid my-n9">
+        <!-- Filter -->
+        <form class="js-validate" method="post">
+            <div class="row mb-5">
+                <div class="col-3 mb-5">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1"><i class="tio-date-range mr-1"></i></span>
+                        </div>
+                        @*<input type="text" class="form-control" id="withPrependLabel" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">*@
+                        @Html.TextBoxFor(m => m.FilterDate, new { id = "js-daterangepicker-predefined", @class = "btn btn-white dropdown-toggle", style = "width:300px;", @required = "required" })
+                    </div>
+
+                </div>
+                <div class="col-auto mb-2">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </div>
+            <!-- End Filter -->
+        </form>
+    </div>
+
+    <div class="content container-fluid my-n9">
+        @if (Model.ShowReport == false)
+        {
+            <div class="card">
+                <div class="card-body">
+                    <!-- Hero Section -->
+                    <div class="container space-2">
+                        <div class="row justify-content-lg-between align-items-lg-center">
+                            <div class="col-sm-10 col-lg-5 mb-7 mb-lg-0">
+                                <img class="img-fluid" src="../front/front-v3.2.1/assets/svg/illustrations/reading.svg" alt="Image Description">
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mb-5">
+                                    <h1 class="display-4 mb-3">
+                                        Tarsus report
+                                        <br>
+                                        <span class="text-primary font-weight-bold">
+                                            <span class="js-text-animation"></span>
+                                        </span>
+                                    </h1>
+                                    <p class="lead">Complete the filters above to view the report</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Hero Section -->
+                </div>
+            </div> <!--<div class="card mb-3 mb-lg-5">-->
+        }
+        else
+        {
+            <div id="editAddressCard" class="card mb-3 mb-lg-5">
+                <div class="card-header">
+                    <h5 class="card-title">Report Information</h5>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="embed-responsive embed-responsive-1by1">
+                            <iframe class="embed-responsive-item" src="@Model.Url"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</main>

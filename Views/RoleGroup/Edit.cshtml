@@ -1,0 +1,76 @@
+﻿@model Triton.Operations.Models.RoleGroupViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- ========== MAIN ========== -->
+<main id="content" role="main" class="main">
+    <partial name="_LayoutHeader" view-data='@new ViewDataDictionary(ViewData) { { "HeadingDetails", "Administration" }, { "HeadingSubTittle", "Role Configuration" }, { "HeadingSubDetails", "Update" } }' />
+
+    <!-- End Breadcrumb Section -->
+    <!-- Content Section -->
+    <div class="content container-fluid my-n9">
+        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>
+                    @Model.ErrorMessage
+                   
+                </strong>
+
+            </div>
+        }
+        <form class="js-validate" method="post" asp-action="Edit" asp-controller="RoleGroup">
+            <div class="card">
+                <div class="card-header">
+                    <p class="card-header-title">Update Role Group</p>
+                </div>
+                <div class="card-body">
+                    <div class="row form-group">
+                        <label class="col-sm-3 col-form-label input-label">Role Name <span class="fas text-danger fa-lg mr-1">*</span></label>
+                        <div class="col-sm-4 js-form-message mb-3">
+                            <input id="roleNameTextBox" type="text" class="form-control stringValidation" required
+                                   data-msg="Please enter a role name." placeholder="RoleName" aria-label="Current Value" asp-for="@Model.RoleGroup.RoleName">
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label class="col-sm-3 col-form-label input-label">Description <span class="fas text-danger fa-lg mr-1">*</span></label>
+                        <div class="col-sm-4 js-form-message mb-3">
+                            <input id="DescriptionNameTextBox" type="text" class="form-control stringValidation" required
+                                   data-msg="Please enter description." placeholder="Description" aria-label="Current Value" asp-for="@Model.RoleGroup.Description">
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label class="col-sm-3 col-form-label input-label mr-1"><span class="fas text-danger fa-lg mr-1">*</span>indicates required</label>
+                    </div>
+                    <!-- End Form -->
+
+                </div>
+                <!-- Footer -->
+                <div class="card-footer">
+                    <div class="d-flex justify-content-center align-content-end" style="margin-left: 80px;">
+                        <a class="btn btn-white " href="@Url.Action("Overview", "RoleGroup")">Cancel</a>
+                        <input type="submit" value="Save" class="btn btn-primary ml-2" id="btnSave" />
+                    </div>
+
+                </div>
+                @Html.HiddenFor(model => model.RoleGroup.RoleGroupID)
+                @Html.HiddenFor(model => model.RoleGroup.DeletedOn)
+                @Html.HiddenFor(model => model.RoleGroup.DeletedBy)
+                @Html.HiddenFor(model => model.RoleGroup.CreatedBy)
+                @Html.HiddenFor(model => model.RoleGroup.CreatedOn)
+                @Html.HiddenFor(model => model.RoleGroup.SystemID)
+                @Html.HiddenFor(model => model.RoleGroup.CreatedOn)
+                @Html.HiddenFor(model => model.RoleGroup.Description)
+                <!-- End Footer -->
+            </div>
+        </form>
+    </div>
+    <!-- End Content Section -->
+</main>
+
+

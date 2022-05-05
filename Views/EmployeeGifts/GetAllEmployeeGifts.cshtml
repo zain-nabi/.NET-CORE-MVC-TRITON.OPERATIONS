@@ -1,0 +1,289 @@
+﻿@model List<Triton.Model.TritonOps.Custom.EmployeeGiftsEditModel>
+@inject IConfiguration Configuration
+
+
+@{
+    ViewData["Title"] = "EmployeeGifts List";
+    var template = "../front/front-v3.2.1";
+}
+
+
+<style>
+    .invalid-input {
+        width: 100%;
+        margin-top: 0.25rem;
+        font-size: 80%;
+        color: #ed4c78;
+    }
+    table.dataTable.no-footer {
+        border-bottom: 0 #ffffff;
+    }
+
+    .dataTables_length {
+        margin-left: 10px;
+        padding: 10px;
+        background-color: transparent;
+    }
+
+    .dataTables_filter {
+        margin-right: 20px;
+        padding: 10px;
+    }
+
+</style>
+@functions {
+
+    private void RenderLeftBarItems(string label, string value, string icon)
+    {
+        <li class="nav-item">
+            <a class="nav-link">
+                <i class="fas fa-@icon nav-icon"></i>
+                @label
+                <span class="badge-pill nav-link-badge">@value</span>
+            </a>
+        </li>
+    }
+}
+<main id="content" role="main" class="bg-light">
+    <!-- Breadcrumb Section -->
+    <div class="bg-navy" style="background-image: url(@LocalisationService.HtmlTemplate/assets/svg/components/abstract-shapes-20.svg);">
+        <div class="container space-1 space-top-lg-2 space-bottom-lg-3">
+            <div class="row align-items-center">
+                <div class="col">
+                    <div class="d-none d-lg-block">
+                        <h1 class="h2 text-white">Employee Gifts</h1>
+                    </div>
+
+                    <!-- Breadcrumb -->
+                    <ol class="breadcrumb breadcrumb-light breadcrumb-no-gutter mb-0">
+                        <li class="breadcrumb-item">Employee </li>
+                        <li class="breadcrumb-item active" aria-current="page">Gifts</li>
+                    </ol>
+                    <!-- End Breadcrumb -->
+                </div>
+
+                <div class="col-auto">
+                    <!-- Responsive Toggle Button -->
+                    <button type="button" class="navbar-toggler btn btn-icon btn-sm rounde-circle d-lg-none" aria-label="Toggle navigation" aria-expanded="false" aria-controls="sidebarNav" data-toggle="collapse" data-target="#sidebarNav">
+                        <span class="navbar-toggler-default">
+                            <svg width="14" height="14" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+                                <path fill="currentColor" d="M17.4,6.2H0.6C0.3,6.2,0,5.9,0,5.5V4.1c0-0.4,0.3-0.7,0.6-0.7h16.9c0.3,0,0.6,0.3,0.6,0.7v1.4C18,5.9,17.7,6.2,17.4,6.2z M17.4,14.1H0.6c-0.3,0-0.6-0.3-0.6-0.7V12c0-0.4,0.3-0.7,0.6-0.7h16.9c0.3,0,0.6,0.3,0.6,0.7v1.4C18,13.7,17.7,14.1,17.4,14.1z"></path>
+                            </svg>
+                        </span>
+                        <span class="navbar-toggler-toggled">
+                            <svg width="14" height="14" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+                                <path fill="currentColor" d="M11.5,9.5l5-5c0.2-0.2,0.2-0.6-0.1-0.9l-1-1c-0.3-0.3-0.7-0.3-0.9-0.1l-5,5l-5-5C4.3,2.3,3.9,2.4,3.6,2.6l-1,1 C2.4,3.9,2.3,4.3,2.5,4.5l5,5l-5,5c-0.2,0.2-0.2,0.6,0.1,0.9l1,1c0.3,0.3,0.7,0.3,0.9,0.1l5-5l5,5c0.2,0.2,0.6,0.2,0.9-0.1l1-1 c0.3-0.3,0.3-0.7,0.1-0.9L11.5,9.5z"></path>
+                            </svg>
+                        </span>
+                    </button>
+                    <!-- End Responsive Toggle Button -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Breadcrumb Section -->
+    <!-- Content Section -->
+    <div class="container space-2 space-top-lg-0 mt-lg-n10">
+        <div class="card">
+            <!--Header-->
+            <div class="card-header">
+                <div class="row justify-content-between align-items-center flex-grow-1">
+                    <div class="col-12 col-md">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="card-header-title">Employee Gifts List</h5>
+                        </div>
+                    </div>
+
+                    <div class="col-auto">
+                        <!--Filter-->
+                        <div class="col-md">
+                            <a href="@Url.Action("Index", "EmployeeGifts")" class="btn btn-primary">Create Employee Gift</a>
+                        </div>
+                        <!--End Filter-->
+                    </div>
+                </div>
+            </div>
+            <!--End Header-->
+            <!--Table-->
+            <div class="card mb-3 mb-lg-5">
+                <div class="table-responsive datatable-custom">
+                    <div class="table-responsive-md u-datatable">
+                        <table class="js-datatable table table-borderless u-datatable__striped u-datatable__content u-datatable__trigger"
+                               data-dt-info="#datatableWithPaginationInfo"
+                               data-dt-page-length="10"
+                               data-dt-is-show-paging="true"
+                               data-dt-pagination="datatablePagination"
+                               data-dt-pagination-classes="pagination mb-0"
+                               data-dt-pagination-items-classes="page-item"
+                               data-dt-pagination-links-classes="page-link"
+                               data-dt-pagination-next-classes="page-item"
+                               data-dt-pagination-next-link-classes="page-link"
+                               data-dt-pagination-next-link-markup='<span aria-hidden="true">Next</span>'
+                               data-dt-pagination-prev-classes="page-item"
+                               data-dt-pagination-prev-link-classes="page-link"
+                               data-dt-pagination-prev-link-markup='<span aria-hidden="true">Prev</span>'>
+                            <thead class="thead-light">
+                                <tr>
+                                    <th scope="col" class="font-weight-medium sorting_asc" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="
+                                                     Branch Name
+                                                 : activate to sort column descending">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            Branch Name
+                                        </div>
+                                    </th>
+
+                                    <th scope="col" class="font-weight-medium sorting_asc" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="
+                                                     FullNames                                                          : activate to sort column descending">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            Full Names
+                                        </div>
+                                    </th>
+                                    <th scope="col" class="font-weight-medium sorting_asc" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="
+                                                     Surname                                                          : activate to sort column descending">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            Surname
+                                        </div>
+                                    </th>
+                                    <th scope="col" class="font-weight-medium sorting_asc" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="
+                                                     Employee Code                                                          : activate to sort column descending">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            Employee Code
+                                        </div>
+                                    </th>
+                                    <th scope="col" class="font-weight-medium sorting_asc" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="
+                                                     Gift item                                                          : activate to sort column descending">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            Employee Gift
+                                        </div>
+                                    </th>
+                                    <th style="width: 5%;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="font-size-1">
+                                @foreach (var item in Model)
+                                {
+                                <tr class="height: 5%;">
+
+                                    <td>
+                                        <div class="media align-items-center">
+                                            @{
+                                                var _color = "soft-success";
+
+                                                if (@item.orgOrganogram.orgActive == false)
+                                                {
+                                                    _color = "soft-danger";
+                                                }
+                                            }
+                                            <span class="avatar avatar-sm avatar-@_color avatar-circle mr-3">
+                                                <span class="avatar-initials">@item.CostCentres.BranchName.Trim().Substring(0, 1)</span>
+                                            </span>
+
+                                            <div class="media-body">
+                                                <a class="d-inline-block text-dark"  href="#">
+                                                    <h6 class="text-hover-primary mb-0">@Html.DisplayFor(modelItem => item.CostCentres.BranchFullName)</h6>
+                                                </a>
+
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <div class="media align-items-center">
+                                            <div class="media-body">
+                                                <span class="d-flex align-items-center" style="padding-top:13px;">
+                                                    <small class="d-block">@item.Employees.FullNames</small>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="media align-items-center">
+                                            <div class="media-body">
+                                                <small class="d-block" style="padding-top:13px;">@item.Employees.Surname</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="media align-items-center">
+                                            <div class="media-body">
+                                                <small class="d-block" style="padding-top:13px;">@item.Employees.CurrentEmployeeCode</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="media align-items-center">
+                                            <div class="media-body">
+                                                <small class="d-block" style="padding-top:13px;">@item.EmployeeGifts.Item</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="margin-top:2px;">
+                                        <a class="text-body"  href="@Url.Action("GetEmployeeGift", "EmployeeGifts", new { employeeCode = @item.EmployeeGifts.EmployeeCode})" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit">
+                                            <i class="fas fa-edit" style="padding-top:13px;"></i>
+                                        </a>
+                                    </td>
+
+                                </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <!--Pagination-->
+                    <div class="d-flex justify-content-center justify-content-sm-end">
+                        <nav id="datatablePagination" aria-label="Activity pagination"></nav>
+
+                        <small id="datatableInfo" class="text-secondary"></small>
+                    </div>
+                    <!--End Pagination-->
+                </div>
+            </div>
+            <!--End Table-->
+        </div>
+    </div>
+
+</main>
+
+
+@section scripts {
+    <!-- JS Implementing Plugins -->
+    <script src="@template/assets/vendor/select2/dist/js/select2.full.js"></script>
+    <script src="@template/assets/vendor/select2/dist/js/select2.js"></script>
+    <script src="@template/assets/vendor/datatables.net/js/jquery.dataTables.js"></script>
+    <script src="@template/assets/js/hs.datatables.js"></script>
+    <script src="@template/assets/js/hs.datatablesfilter.js"></script>
+    <script>
+        $(document).on('ready',
+            function () {
+
+                $.HSCore.components.HSDatatables.init('.js-datatable');
+                $("#form1").validate({
+
+                    errorClass: 'invalid-input'
+                });
+
+
+
+                jQuery.validator.addClassRules('numberValidation',
+                    {
+                        required: true,
+                        number: true
+                    });
+
+
+
+
+                $('.js-custom-select').select2({
+                    sorter: data => data.sort((a, b) => a.text.localeCompare(b.text)),
+                    minimumResultsForSearch: 4
+
+                });
+            });
+
+
+
+
+
+
+    </script>
+}

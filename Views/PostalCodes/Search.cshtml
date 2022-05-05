@@ -1,0 +1,624 @@
+﻿@model Triton.Operations.Models.PostalCodesViewModel
+
+@{
+    ViewData["Title"] = "Search";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int height;
+}
+
+<main id="content" role="main" class="main">
+    @{
+        var postalCode = Model.PostalCodeSearch;
+
+    }
+    <div class="content container-fluid">
+        <!-- Page Header -->
+
+        <div class="js-nav-scroller hs-nav-scroller-horizontal mb-5">
+
+            <ul class="nav nav-tabs align-items-center">
+                <li class="col-sm mb-2 mb-sm-0">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb breadcrumb-no-gutter">
+                            <li class="breadcrumb-item"><a class="breadcrumb-link" href="javascript:;">Administration</a></li>
+                            <li class="breadcrumb-item"><a class="breadcrumb-link" href="javascript:;">Overview</a></li>
+                        </ol>
+                    </nav>
+
+                    <h1 class="page-header-title">PostalCodes</h1>
+                <li />
+
+
+                <li class="nav-item ml-auto">
+                    <a class="btn btn-sm btn-primary mr-2" href="@Url.Action("Create", "PostalCodes")">
+                        <i class="fal fa-mail-bulk mr-1"></i> Create
+                    </a>
+
+                    <div class="hs-unfold hs-nav-scroller-unfold">
+                        <a class="js-hs-unfold-invoker btn btn-icon btn-sm btn-white" href="javascript:;" data-hs-unfold-options="{
+                         &quot;target&quot;: &quot;#profileDropdown&quot;,
+                         &quot;type&quot;: &quot;css-animation&quot;
+                       }" data-hs-unfold-target="#profileDropdown" data-hs-unfold-invoker="">
+                            <i class="tio-more-vertical"></i>
+                        </a>
+
+                        <div id="profileDropdown" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-right mt-1 hs-unfold-content-initialized hs-unfold-css-animation animated hs-unfold-hidden hs-unfold-reverse-y" data-hs-target-height="243" data-hs-unfold-content="" data-hs-unfold-content-animation-in="slideInUp" data-hs-unfold-content-animation-out="fadeOut" style="animation-duration: 300ms;">
+                            <div class="dropdown-divider"></div>
+                            <span class="dropdown-header">Options</span>
+                            <a class="dropdown-item" href="@Url.Action("DownloadPostalCodes", "PostalCodes")">
+                                <i class="fal fa-download mr-2"></i>Download
+
+                            </a>
+
+                            <a class="dropdown-item" id="import-excel" href="javascript:;" data-toggle="modal" data-target="#exampleModal">
+                                <i class="fal fa-file-upload mr-2"></i>&nbsp;Upload
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </li>
+            </ul>
+        </div>
+
+        <!-- End Row -->
+        <!-- End Page Header -->
+    </div>
+    <div class="content container-fluid my-n9">
+        <!-- Filter -->
+        <form class="js-validate" method="post" asp-action="Search" asp-controller="PostalCodes">
+            <div class="row mb-5">
+                <div class="col-3 mb-5 js-form-message">
+                    <label for="firstNameAddressLabel" class="input-label">Postal Code</label>
+                    <input type="text" value="@Model.PostalCodeSearch" asp-for="@Model.PostalCodeSearch" class="form-control" placeholder="e.g. PAL" aria-label="PostalCode" data-msg="Please enter Postal Code." required>
+                </div>
+
+                <div class="col-auto mb-2">
+                    <label for="firstNameAddressLabel" class="input-label">&nbsp;</label>
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </div>
+            <!-- End Filter -->
+        </form>
+    </div>
+    <div class="content container-fluid my-n9">
+
+        @if (Model.ErrorMessage != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>
+                    @Model.ErrorMessage
+                </strong>
+
+            </div>
+        }
+
+        @if (Model.PostalCodesOverview == null)
+        {
+
+            <div class="card">
+                <!-- Header -->
+                <!-- End Header -->
+                <!-- Table -->
+                <div class="table-responsive datatable-custom">
+                    <div id="datatable_wrapper" class="dataTables_wrapper">
+                        <table id="datatable" class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table"
+                               data-hs-datatables-options='{
+                     "order": [],
+                     "info": {
+                       "totalQty": "#datatableWithPaginationInfoTotalQty"
+                     },
+                     "search": "#datatableSearch",
+                     "entries": "#datatableEntries",
+                     "pageLength": 8,
+                     "isResponsive": false,
+                     "isShowPaging": false,
+                     "pagination": "datatablePagination"
+                   }'>
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Description</th>
+                                    <th>Status</th>
+                                    <th>Created On</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- End Table -->
+                <!-- Footer -->
+                <div class="card-footer">
+                    <!-- Pagination -->
+                    <!-- End Pagination -->
+                </div>
+                <!-- End Footer -->
+
+            </div>
+        }
+        else
+        {
+            @if (Model.PostalCodesOverview.Count() >= 1)
+            {
+                height = 150;
+            }
+            else
+            {
+                height = 0;
+
+            }
+            <div class="card">
+                <div class="card-header">
+                    <div class="row justify-content-between align-items-center flex-grow-1">
+                        <div class="col-sm-6 col-md-4 mb-3 mb-sm-0">
+                            <form>
+                                <!-- Search -->
+                                <div class="input-group input-group-merge input-group-flush">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <i class="tio-search"></i>
+                                        </div>
+                                    </div>
+                                    <input id="datatableSearch" type="search" class="form-control" placeholder="Filter results" aria-label="Filter results">
+                                </div>
+                                <!-- End Search -->
+                            </form>
+                        </div>
+
+                        <div class="hs-unfold">
+                            <a class="js-hs-unfold-invoker btn btn-sm btn-white dropdown-toggle" href="javascript:;" data-hs-unfold-options="{
+                             &quot;target&quot;: &quot;#usersExportDropdown&quot;,
+                             &quot;type&quot;: &quot;css-animation&quot;
+                           }" data-hs-unfold-target="#usersExportDropdown" data-hs-unfold-invoker="">
+                                <i class="tio-download-to mr-1"></i> Options
+                            </a>
+
+                            <div id="usersExportDropdown" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right hs-unfold-content-initialized hs-unfold-css-animation animated hs-unfold-hidden" data-hs-target-height="0" data-hs-unfold-content="" data-hs-unfold-content-animation-in="slideInUp" data-hs-unfold-content-animation-out="fadeOut" style="animation-duration: 300ms;">
+                                <div class="dropdown-divider"></div>
+                                <span class="dropdown-header">Excel</span>
+                                <a id="export-excel" class="dropdown-item" href="@Url.Action("DownloadPostalCodes", "PostalCodes", new { postalCode = @Model.PostalCodeSearch})">
+                                    @*<i class="fal fa-file-spreadsheet mr-2"></i>*@
+                                    <i class="fal fa-download mr-2"></i>
+                                    Download
+                                </a>
+                                @*<a id="import-excel" href="javascript:;" class="dropdown-item" data-toggle="modal" data-target="#exampleModal">
+                                        <i class="fal fa-file-upload mr-2"></i>
+                                        Upload
+                                    </a>*@
+                            </div>
+                        </div>
+
+                        <!-- End Unfold -->
+
+                    </div>
+                </div>
+                <div class="table-responsive datatable-custom">
+                    <div id="exportOptionsDatatables_wrapper" class="dataTables_wrapper">
+                        <table id="exportOptionsDatatables" class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table" style="margin-bottom: @(height+"px");"
+                               data-hs-datatables-options='{
+                     "order": [0, "asc"],
+                     "columnDefs": [ {
+                            "targets": 8,
+                            "orderable": false
+                     } ],
+                     "info": {
+                       "totalQty": "#datatableWithPaginationInfoTotalQty"
+                     },
+                     "search": "#datatableSearch",
+                     "entries": "#datatableEntries",
+                     "pageLength": 8,
+                     "isResponsive": false,
+                     "isShowPaging": false,
+                     "pagination": "datatablePagination"
+                   }'>
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Suburb</th>
+                                    <th>Postal Code</th>
+                                    <th>Rate Area</th>
+
+                                    <th>Serviced By</th>
+                                    <th>Serviced Days</th>
+
+                                    <th>Service Branch</th>
+                                    <th>Status</th>
+
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody class="font-size-1">
+                                @foreach (var item in Model.PostalCodesOverview)
+                                {
+
+                                <tr>
+
+                                    <td class="align-middle">
+                                        <a class="d-flex align-items-center">
+                                            <div class="avatar avatar-soft-primary avatar-circle mr-3">
+                                                <span class="avatar-initials">@item.Name.Substring(0, 1)</span>
+                                            </div>
+                                            <div class="media-body">
+                                                <span class="d-block h5 text-hover-primary mb-0">@item.Name</span>
+
+                                            </div>
+
+                                        </a>
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="media align-items-center">
+                                            <span>@item.Suburb</span>
+                                        </div>
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="media align-items-center">
+                                            <span>@item.PostalCode</span>
+                                        </div>
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="media align-items-center">
+                                            <span>@item.RateArea</span>
+                                        </div>
+                                    </td>
+
+                                    
+                                    <td class="align-middle">
+                                        <div class="media align-items-center">
+                                            <span>@item.ServicedBy</span>
+                                        </div>
+
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="media align-items-center">
+                                            @{
+                                                var serviceDays = @item.ServiceDays;
+                                                var badgeColor = !@item.ServiceDays.Equals("N/A") ? "badge-success" : "badge-danger";
+                                                if (!serviceDays.Equals("N/A") && serviceDays.Contains('-'))
+                                                {
+                                                    foreach (var branch in serviceDays.Split('-'))
+                                                    {
+                                                        <span class="badge @badgeColor">@branch</span>
+                                                        <span style="padding-right:3px;">&nbsp;</span>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge @badgeColor">@serviceDays</span>
+
+                                                }
+
+                                            }
+
+                                        </div>
+
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="media align-items-center">
+                                            <span>@item.ServiceBranch</span>
+                                        </div>
+
+                                    </td>
+                                    <td>
+                                        <div class="media align-items-center">
+                                            <div class="media-body">
+                                                <span class="d-flex align-items-center">
+                                                    @{
+                                                        var dataOriginalTitle = "Delete";
+                                                        var activeText = "Active";
+                                                        var color = "bg-success";
+                                                        var imageClass = "tio-delete dropdown-item-icon";
+
+                                                        if (@item.Active == false)
+                                                        {
+                                                            activeText = "In-active";
+                                                            color = "bg-danger";
+                                                            dataOriginalTitle = "Activate";
+                                                            imageClass = "fal fa-check-circle mr-2";
+
+                                                        }
+                                                    }
+
+                                                    <span class="legend-indicator @color mr-2">
+                                                    </span>
+                                                    <small class="d-block">@activeText</small>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </td>
+
+
+
+                                    <td class="align-middle">
+
+                                        <div class="hs-unfold">
+                                            <a class="js-hs-unfold-invoker btn btn-sm btn-white" href="javascript:;" data-hs-unfold-options="{
+                                            &quot;target&quot;: &quot;#@item.PostalCodeID&quot;,
+                                            &quot;type&quot;: &quot;css-animation&quot;
+                                        }" data-hs-unfold-target="#@item.PostalCodeID" data-hs-unfold-invoker="">
+                                                Actions <i class="tio-chevron-down ml-1"></i>
+                                            </a>
+
+                                            <div id="@item.PostalCodeID" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm dropdown-menu-right hs-unfold-content-initialized hs-unfold-css-animation animated hs-unfold-hidden" data-hs-target-height="145.078" data-hs-unfold-content="" data-hs-unfold-content-animation-in="slideInUp" data-hs-unfold-content-animation-out="fadeOut" style="animation-duration: 300ms;">
+                                                <a class="dropdown-item" href="@Url.Action("GetByPostalCodeID", "PostalCodes", new { postalCodeId = item.PostalCodeID })"><i class="fal fa-edit mr-2"></i>Edit</a>
+                                                <a class="dropdown-item" href="@Url.Action("DeletePostalCodes", "PostalCodes", new { postalCodeId = item.PostalCodeID, postalCode = item.PostalCode })"><i class="@imageClass"></i>@dataOriginalTitle</a>
+
+                                            </div>
+                                        </div>
+                                    </td>
+
+
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- End Table -->
+                <!-- Footer -->
+                <div class="card-footer">
+                    <!-- Pagination -->
+                    <div class="row justify-content-center justify-content-sm-between align-items-sm-center">
+                        <div class="col-sm mb-2 mb-sm-0">
+                            <!--<div class="d-flex justify-content-center justify-content-sm-start align-items-center">
+                            <span class="mr-2">Showing:</span>-->
+                            @*Select*@
+                            <!--<select id="datatableEntries" class="js-select2-custom"
+                                          data-hs-select2-options='{
+                              "minimumResultsForSearch": "Infinity",
+                              "customClass": "custom-select custom-select-sm custom-select-borderless",
+                              "dropdownAutoWidth": true,
+                              "width": true
+                            }'>
+                                      <option value="4">4</option>
+                                      <option value="6">6</option>
+                                      <option value="8" selected>8</option>
+                                      <option value="12">12</option>
+                                  </select>-->
+                            @*End Select*@
+                            <!--<span class="text-secondary mr-2">of</span>-->
+                            @*Pagination Quantity*@
+                            <!--<span id="datatableWithPaginationInfoTotalQty"></span>
+                            </div>-->
+                        </div>
+
+                        <div class="col-sm-auto">
+                            <div class="d-flex justify-content-center justify-content-sm-end">
+                                <!-- Pagination -->
+                                <nav id="datatablePagination" aria-label="Activity pagination"></nav>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Pagination -->
+                </div>
+                <!-- End Footer -->
+
+            </div>
+        }
+    </div>
+
+</main>
+
+<!-- Modal -->
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form method="post" asp-action="UploadPostalCodes" asp-controller="PostalCodes" enctype="multipart/form-data" class="js-validate" id="addForm">
+
+            <div class="modal-content">
+                <!-- Header -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Upload Files</h5>
+                    <button type="button" class="btn btn-icon btn-sm btn-ghost-secondary" data-dismiss="modal" aria-label="Close">
+                        <i class="tio-clear tio-lg" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <!-- End Header -->
+                <!-- Body -->
+
+                <div class="modal-body">
+                    <center><div class="dz-max-files-reached" id="ErrorMessages" style="color:red;"></div></center>
+                    <!-- Dropzone -->
+                    <!-- Dropzone -->
+                    <div id="attachFilesLabel" class="js-dropzone dropzone-custom custom-file-boxed">
+                        <div class="dz-message custom-file-boxed-label">
+                            <img class="avatar avatar-xl avatar-4by3 mb-3" src="~/front-dashboard-v1.1/src/assets/svg/illustrations/browse.svg" alt="Image Description">
+
+                            <h5>Drag and drop your file here</h5>
+
+                            <p class="mb-2">or</p>
+                            <span class="btn btn-sm btn-white">Browse files</span>
+                        </div>
+                    </div>
+                    <!-- End Dropzone -->
+                    <!-- End Dropzone -->
+                </div>
+                <input type="hidden" name="postalCode" value="@Model.PostalCodeSearch" />
+
+                <!-- End Body -->
+                <!-- Footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" id="submit">Save</button>
+                </div>
+                <!-- End Footer -->
+            </div>
+
+        </form>
+
+    </div>
+</div>
+<div id="spinnerModal" class="modal fade bd-example-modal-lg" data-backdrop="static" data-keyboard="false" tabindex="-1">
+    <div class="theme-tritonexpress-loader">
+        <i class="fa fa-spinner fa-spin fa-2x"></i>  Loading.......
+    </div>
+</div>
+
+@section scripts{
+    <script>
+
+        $(document).on('ready', function () {
+
+            // INITIALIZATION OF DROPZONE FILE ATTACH MODULE
+            // =======================================================
+            $('.js-dropzone').each(function () {
+                var dropzone = $.HSCore.components.HSDropzone.init('#' + $(this).attr('id'));
+
+                dropzone.on("addedfile", function (file) {
+                    console.log(file.name);
+                    document.getElementById('ErrorMessages').innerHTML = "";
+                });
+            });
+
+
+
+        });
+
+
+        ; (function ($) {
+            'use strict';
+
+            $.HSCore.components.HSDropzone = {
+                defaults: {
+                    // Default variables
+                    url: "/PostalCodes/UploadPostalCodes",
+                    thumbnailWidth: 300,
+                    autoDiscover: false,
+                    uploadMultiple: true,
+                    autoProcessQueue: false,
+                    parallelUploads: 10,
+                    paramName: function myParamName() {
+                        return "File";
+                    },
+                    thumbnailHeight: 300,
+                    accept: function (file, done) {
+                        if (file.name.substring(file.name.indexOf('.')) !== ".xlsx") {
+                            done("Please upload a excel file format");
+                        }
+                        else {
+
+                            done();
+                        }
+                    },
+                    previewTemplate: $('<div>' +
+                        '  <div class="col h-100 px-1 mb-2">' +
+                        '    <div class="dz-preview dz-file-preview">' +
+                        '      <div class="d-flex justify-content-end dz-close-icon">' +
+                        '        <small class="tio-clear" data-dz-remove></small>' +
+                        '      </div>' +
+                        '      <div class="dz-details media">' +
+                        '        <div class="dz-img">' +
+                        '         <img class="img-fluid dz-img-inner" data-dz-thumbnail>' +
+                        '        </div>' +
+                        '        <div class="media-body dz-file-wrapper">' +
+                        '         <h6 class="dz-filename">' +
+                        '          <span class="dz-title" data-dz-name></span>' +
+                        '         </h6>' +
+                        '         <div class="dz-size" data-dz-size></div>' +
+                        '        </div>' +
+                        '      </div>' +
+                        '      <div class="dz-progress progress">' +
+                        '        <div class="dz-upload progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" data-dz-uploadprogress></div>' +
+                        '      </div>' +
+                        '      <div class="d-flex align-items-center">' +
+                        '        <div class="dz-success-mark">' +
+                        '          <span class="tio-checkmark-circle"></span>' +
+                        '        </div>' +
+                        '      </div>' +
+                        '    </div>' +
+                        '  </div>' +
+                        '</div>').html()
+                },
+
+                init: function (el, options) {
+                    if (!el.length) return;
+
+                    var context = this,
+                        $el = $(el),
+                        defaults = Object.assign({}, context.defaults),
+                        dataSettings = $el.attr('data-hs-dropzone-options') ? JSON.parse($el.attr('data-hs-dropzone-options')) : {},
+                        settings = {
+                            init: function () {
+                                var $this = this,
+                                    $message = $($this.element).find('.dz-message');
+
+                                $this.on('addedfile', function (file) {
+                                    if (String(file.type).slice(0, 6) !== 'image/') {
+                                        $(file.previewElement).find('.dz-img').replaceWith('<span class="dz-file-initials">' + file.name.substring(0, 1).toUpperCase() + '</span>');
+                                    }
+
+                                    $message.hide();
+                                });
+
+                                $this.on('removedfile', function () {
+                                    if ($this.files.length <= 0) {
+                                        $message.show();
+                                    }
+                                });
+
+                                $this.on("error", function (file, message) {
+                                    var fileExtension = file.name.substring(file.name.indexOf('.'));
+                                    if (fileExtension !== '.csv') {
+                                        document.getElementById('ErrorMessages').innerHTML = message;
+                                        this.removeFile(file);
+                                    }
+                                    else {
+                                        document.getElementById('ErrorMessages').innerHTML = "";
+                                    }
+
+                                });
+
+                                var submitButton = document.querySelector("#submit");
+                                var myDropzone = this; //closure
+
+                                submitButton.addEventListener("click", function (e) {
+
+                                    if (myDropzone.files.length !== 0) {
+
+                                        e.preventDefault();
+                                        myDropzone.processQueue();
+                                        $('#exampleModal').modal('hide');
+                                        $('#spinnerModal').modal('show');
+
+                                        $this.on("success", function (file, responseText) {
+                                            $('#spinnerModal').modal('hide');
+                                            window.location.href = "/Home/Message?type=" + responseText.message + "&url=" + responseText.url;
+                                        });
+
+                                    } else {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        $('#addForm').submit();
+
+                                    }
+
+                                });
+
+                                $this.on("sending", function (file, xhr, formData) {
+                                    $('#addForm').find('input').each(function () {
+                                        formData.append($(this).attr('name'), $(this).val());
+                                    });
+                                });
+                            }
+                        };
+                    settings = $.extend(true, defaults, settings, dataSettings, options);
+
+                    /* Start : Init */
+
+                    var newDropzone = new Dropzone(el, settings);
+
+                    /* End : Init */
+
+                    return newDropzone;
+                }
+
+            };
+
+        })(jQuery);
+
+
+    </script>
+}

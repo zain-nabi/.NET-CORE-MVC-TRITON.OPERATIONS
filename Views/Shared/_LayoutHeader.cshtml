@@ -1,0 +1,82 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    var usernameRole = ViewData.ContainsKey("usernameRole") ? ViewData["usernameRole"].ToString() : null;
+    var roleList = new List<string>() { "Admin Director", "Managing Director", "Development Manager", "Developer", "Junior Developer" };
+
+    if (!string.IsNullOrWhiteSpace(usernameRole))
+        roleList.Add(usernameRole);
+    roleList.Sort();
+
+    var roles = string.Join(", ", roleList);
+
+    var headings = ViewData.ContainsKey("HeadingDetails") ? ViewData["HeadingDetails"].ToString() : string.Empty;
+    var headingSubTittle = ViewData.ContainsKey("HeadingSubTittle") ? ViewData["HeadingSubTittle"].ToString() : string.Empty;
+    var headingSubDetails = ViewData.ContainsKey("HeadingSubDetails") ? ViewData["HeadingSubDetails"].ToString() : string.Empty;
+
+    var hrefLink = ViewData.ContainsKey("hrefLink") ? ViewData["hrefLink"].ToString() : "#";
+    var action = ViewData.ContainsKey("action") ? ViewData["action"].ToString() : string.Empty;
+    var btnIcon = ViewData.ContainsKey("btnIcon") ? ViewData["btnIcon"].ToString() : string.Empty;
+
+    // Append the roles to the link
+    var separator = "?";
+
+    if (hrefLink.Contains("?"))
+    {
+        separator = "&";
+    }
+
+    hrefLink = $"{hrefLink}{separator}roles={roles.Replace(" ", "%20")}";
+}
+
+
+<div class="content container-fluid">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="row align-items-end">
+            <div class="col-sm mb-2 mb-sm-0">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb breadcrumb-no-gutter">
+                        <li class="breadcrumb-item"><a class="breadcrumb-link" href="javascript:;">@headings</a></li>
+                        <li class="breadcrumb-item"><a class="breadcrumb-link" href="javascript:;">@headingSubTittle</a></li>
+
+                    </ol>
+                </nav>
+
+                <h1 class="page-header-title">@headingSubDetails</h1>
+            </div>
+
+            <div class="col-sm-auto">
+                @if (!string.IsNullOrEmpty(action))
+                {
+                    <a class="btn btn-sm btn-primary mr-2" href=@hrefLink>
+                        <i class="@btnIcon mr-1"></i> @action
+                    </a>
+                }
+                <!-- Unfold -->
+                <div class="hs-unfold hs-nav-scroller-unfold">
+                    <a class="js-hs-unfold-invoker btn btn-icon btn-sm btn-white" href="javascript:;" data-hs-unfold-options="{
+                         &quot;target&quot;: &quot;#profileDropdown&quot;,
+                         &quot;type&quot;: &quot;css-animation&quot;
+                       }" data-hs-unfold-target="#profileDropdown" data-hs-unfold-invoker="">
+                        <i class="fal fa-user-lock"></i>
+                    </a>
+
+                    <div id="profileDropdown" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-right mt-1 hs-unfold-hidden hs-unfold-content-initialized hs-unfold-css-animation animated hs-unfold-reverse-y" data-hs-target-height="243" data-hs-unfold-content="" data-hs-unfold-content-animation-in="slideInUp" data-hs-unfold-content-animation-out="fadeOut" style="animation-duration: 300ms;">
+                        <span class="dropdown-header">Permissions</span>
+                        @foreach (var item in roleList.Distinct())
+                        {
+                            <a class="dropdown-item" href="#">
+                                <i class="fal fa-lock-alt dropdown-item-icon"></i> @item
+                            </a>
+                        }
+
+                    </div>
+                </div>
+                <!-- End Unfold -->
+            </div>
+        </div>
+        <!-- End Row -->
+    </div>
+    <!-- End Page Header -->
+</div>

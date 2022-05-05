@@ -1,0 +1,233 @@
+﻿@model Triton.Service.Model.TritonExpress.Custom.PostalCodesModel
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<main id="content" role="main" class="main">
+    <!-- Content -->
+    <div class="content container-fluid">
+
+        <!-- Page Header -->
+        <div class="js-nav-scroller hs-nav-scroller-horizontal mb-5">
+
+            <ul class="nav nav-tabs align-items-center">
+                <li class="col-sm mb-2 mb-sm-0">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb breadcrumb-no-gutter">
+                            <li class="breadcrumb-item"><a class="breadcrumb-link" href="javascript:;">Administration</a></li>
+                            <li class="breadcrumb-item"><a class="breadcrumb-link" href="javascript:;">Postal Codes</a></li>
+                        </ol>
+                    </nav>
+
+                    <h1 class="page-header-title">Create</h1>
+                <li />
+
+           
+            </ul>
+        </div>
+        <!-- End Page Header -->
+        <!-- Content Section -->
+
+        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>
+                    @Model.ErrorMessage
+
+                </strong>
+
+            </div>
+        }
+        <form class="js-validate" method="post" asp-action="Create" asp-controller="PostalCodes">
+            <div class="card">
+                <div class="card-header">
+                    <p class="card-header-title">Postal Codes </p>
+                </div>
+                <div class="card-body">
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <!-- Form Group -->
+                            <div class="form-group js-form-message">
+                                <label for="PostalCodeLabel" class="input-label">Postal Code <span class="fas text-danger fa-lg mr-1">*</span></label>
+                                <input id="PostalCodeTextBox" type="text" class="form-control stringValidation" required maxlength="255"
+                                       data-msg="Please enter Postal Code." placeholder="Postal Code" asp-for="@Model.PostalCodes.PostalCode" aria-label="Current Value">
+                            </div>
+                            <!-- End Form Group -->
+                        </div>
+                        <div class="col-sm-6">
+
+                            <div class="form-group js-form-message">
+                                <label class="input-label">Name <span class="fas text-danger fa-lg mr-1">*</span></label>
+
+                                <input id="NameTextBox" type="text" class="form-control stringValidation" required maxlength="255"
+                                       data-msg="Please enter Name." placeholder="Name" asp-for="@Model.PostalCodes.Name" aria-label="Current Value">
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <!-- Form Group -->
+                            <div class="form-group js-form-message">
+                                <label for="SuburbCodeLabel" class="input-label">Suburb <span class="fas text-danger fa-lg mr-1">*</span></label>
+                                <input id="SuburbTextBox" type="text" class="form-control stringValidation" required maxlength="255"
+                                       data-msg="Please enter Suburb." placeholder="Suburb" asp-for="@Model.PostalCodes.Suburb" aria-label="Current Value">
+                            </div>
+                            <!-- End Form Group -->
+                        </div>
+                        <div class="col-sm-6">
+
+                            <div class="form-group js-form-message">
+                                <label class="input-label">Rate Area <span class="fas text-danger fa-lg mr-1">*</span></label>
+
+                                <input id="RateAreaTextBox" type="text" class="form-control stringValidation" required maxlength="255"
+                                       data-msg="Please enter RateArea." placeholder="Rate Area" asp-for="@Model.PostalCodes.RateArea" aria-label="Current Value">
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+
+                            <div class="form-group js-form-message">
+                                <label class="input-label">Known As <span class="fas text-danger fa-lg mr-1">*</span></label>
+
+                                <input id="KnownAsTextBox" type="text" class="form-control stringValidation" required
+                                       data-msg="Please enter KnownAs." placeholder="KnownAs" asp-for="@Model.PostalCodes.KnownAs" aria-label="Current Value">
+
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+
+                            <div class="form-group js-form-message">
+                                <label class="input-label">Branch Code <span class="fas text-danger fa-lg mr-1">*</span></label>
+
+                                <div>
+                                    @Html.DropDownListFor(m => m.SelectedBranchCode, new SelectList(Model.Branches, "BranchName", "BranchFullName"), new { @class = "js-select2-custom" })
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <!-- Form Group -->
+                            <div class="form-group js-form-message">
+                                <label class="input-label">Transit Time <span class="fas text-danger fa-lg mr-1">*</span></label>
+                                <div>
+                                    @Html.DropDownListFor(m => m.SelectedPostalCodeTransitTimeId, new SelectList(Model.PostalCodeTransitTime, "PostalCodeTransitTimeID", "Description"), new { @class = "js-select2-custom" })
+                                </div>
+
+                            </div>
+                            <!-- End Form Group -->
+                        </div>
+                        <div class="col-sm-6">
+                            <!-- Form Group -->
+                            <div class="form-group js-form-message">
+                                <label class="input-label">Serviced By <span class="fas text-danger fa-lg mr-1">*</span></label>
+                                <div>
+                                    @Html.DropDownListFor(m => m.SelectedLookupcodesId, new SelectList(Model.Lookupcodes, "LookUpCodeID", "Name"), new { @class = "js-select2-custom" })
+                                </div>
+
+                            </div>
+                            <!-- End Form Group -->
+                        </div>
+
+                        <!-- End Form Group -->
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <!-- Form Group -->
+                            <div class="form-group js-form-message">
+                                <label for="BayRouteLabel" class="input-label">Bay Route</label>
+                                <input id="BayRouteTextBox" type="text" class="form-control stringValidation"
+                                       data-msg="Please enter Bay Route." placeholder="Bay Route" asp-for="@Model.PostalCodes.BayRoute" aria-label="Current Value">
+                            </div>
+                            <!-- End Form Group -->
+                        </div>
+                        <div class="col-sm-6">
+                            <!-- Form Group -->
+                            <div class="form-group js-form-message">
+                                <label for="BayNoLabel" class="input-label">Bay Number</label>
+                                <input id="SuburbTextBox" type="text" class="form-control stringValidation"
+                                       data-msg="Please enter Bay Number." placeholder="BayNo" asp-for="@Model.PostalCodes.BayNo" aria-label="Current Value">
+                            </div>
+                            <!-- End Form Group -->
+                        </div>
+
+                    </div>
+
+
+                    <div class="row">
+
+                        <div class="col-sm-6">
+
+                            <div class="form-group js-form-message">
+                                <label class="input-label">Bay Name</label>
+
+                                <input id="BayNameTextBox" type="text" class="form-control stringValidation"
+                                       data-msg="Please enter BayName." placeholder="Bay Name" asp-for="@Model.PostalCodes.BayName" aria-label="Current Value">
+
+                            </div>
+                        </div>
+
+
+                        <!-- End Form Group -->
+                    </div>
+
+                    <div class="row form-group">
+                        <label class="col-sm-3 col-form-label input-label mr-1"><span class="fas text-danger fa-lg mr-1">*</span><span class="text-muted">indicates required</span></label>
+                    </div>
+                    <!-- Footer -->
+
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-end align-content-end">
+                            <a class="btn btn-white " href="@Url.Action("Search", "PostalCodes")">Cancel</a>
+                            <input type="submit" value="Save" class="btn btn-primary ml-2" id="btnSave" />
+
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- End Footer -->
+                    @*@Html.HiddenFor(model => model.RoleGroup.RoleGroupID)*@
+
+
+                </div>
+
+
+            </div>
+        </form>
+
+        <!-- End Content Section -->
+    </div>
+</main>
+@section scripts {
+    <!-- JS Plugins Init. -->
+    <script src="~/front-dashboard-v1.1/dist/assets/vendor/flatpickr/dist/flatpickr.min.js"></script>
+    <script src="~/front-dashboard-v1.1/src/assets/js/hs.flatpickr.js"></script>
+    <script>
+
+        $(document).on('ready',
+            function () {
+
+                // INITIALIZATION OF FLATPICKR
+                // =======================================================
+                $('.js-flatpickr').each(function () {
+                    $.HSCore.components.HSFlatpickr.init($(this));
+                });
+            });
+
+    </script>
+
+}

@@ -1,0 +1,62 @@
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+@model Triton.Model.LeaveManagement.Tables.Employees
+@{
+    ViewData["Title"] = "Triton Express";
+    ViewData["Header"] = "Employee";
+    ViewData["HeaderBold"] = "search";
+    ViewData["Description"] = "Get the employees details";
+    var template = $"{Configuration.GetSection("URL").GetSection("template").Value}";
+}
+
+<div class="container space-2">
+    <div class="row justify-content-md-between">
+        <div class="col-md-6 space-2 space-top-lg-5 space-bottom-lg-3">
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger" role="alert" asp-validation-summary="All">
+                </div>
+            }
+
+            <div class="mb-5">
+                <h1>Enter an employee code</h1>
+            </div>
+
+            <form class="js-validate d-flex align-items-center" id="form" method="post">
+                <div class="d-inline-block w-75 mr-2">
+                    <input class="form-control" asp-for="CurrentEmployeeCode" placeholder="Search for a staff member" aria-label="Search for a staff member" required
+                           data-parsley-required="true" data-parsley-required-message="Staff employee code is required." value="">
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <span class="fas fa-search"></span>
+                </button>
+            </form>
+            <!-- Input -->
+            @*<form class="input-group input-group-merge mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="askQuestions">
+                            <i class="fas fa-search"></i>
+                        </span>
+                    </div>
+                    <input type="search" class="form-control" placeholder="Search for a staff member..." aria-label="Search for a staff member..." aria-describedby="askQuestions">
+                    <button type="button" class="btn btn-primary">Primary</button>
+                </form>*@
+            <!-- End Input -->
+        </div>
+
+        <div class="col-md-5 align-self-md-end d-none d-md-inline-block">
+            <!-- SVG Icon -->
+            <figure class="mb-n3">
+                <img class="img-fluid" src="@template/assets/svg/illustrations/knowledgebase-community-1.svg" alt="Image Description">
+            </figure>
+            <!-- End SVG Icon -->
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            enableValidation("#form");
+        });
+    </script>
+}

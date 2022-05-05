@@ -1,0 +1,90 @@
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+@model EmployeeSearchModel
+
+@{
+    ViewData["Title"] = "CompletedSearch";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Header"] = "Completed screening";
+    ViewData["HeaderBold"] = "search";
+    ViewData["Description"] = "Complete the form below to start the search";
+    var template = $"{Configuration.GetSection("URL").GetSection("template").Value}";
+}
+
+<!-- Jobs Section -->
+<div class="container space-5">
+    <form class="js-validate" id="form" method="post">
+        <div class="form-row">
+            <div class="col-sm col-md-5">
+                <div class="js-form-message">
+                    <label class="sr-only" for="signupSrEmailExample1">Employee code</label>
+                    <div class="input-group">
+                        <input type="text" asp-for="EmployeeCode" class="form-control" placeholder="Employee code / Visitors contact number" aria-label="Employee code / Visitor contact number" required
+                               data-parsley-required-message="Please enter an employee code or visitors contact number." data-parsley-required="true">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm col-md-5">
+                <div class="js-form-message">
+                    <label class="sr-only" for="signupSrEmailExample1">Date</label>
+                    <div class="input-group">
+                        <div id="flatpickrWrapperFrom" class="flatpickr input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="fas fa-calendar"></i>
+                                </span>
+                            </div>
+                            <input asp-for="Date" class="js-range-flatpickr form-control bg-transparent rounded-right" type="text" placeholder="From" aria-label="From" value="@DateTime.Now.ToString("yyyy-MM-dd")"
+                                   data-hs-flatpickr-options='{ "appendTo": "#flatpickrWrapperFrom", "dateFormat": "Y-m-d" }'>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-sm col-md-2">
+                <button type="submit" class="btn btn-primary btn-block">Search</button>
+            </div>
+        </div>
+    </form>
+    @if (Model.QuestionnaireSearchModel != null)
+    {
+        <div class="row justify-content-lg-between align-items-lg-center mt-7 mb-3">
+            <div class="col-sm-auto">
+                <h3 class="h4">Results</h3>
+            </div>
+            <div class="col-sm text-sm-right">
+                <small>@Model.QuestionnaireSearchModel.Count records</small>
+            </div>
+        </div>
+        @foreach (var item in Model.QuestionnaireSearchModel)
+        {
+            <a class="card card-frame py-3 px-4 mb-2" href="@Url.Action("CompletedInfo", "Person", new { item.QuestionnaireId, item.IdentityResponse })">
+                <div class="row align-items-sm-center">
+                    <span class="col-sm-6 text-dark">
+                        @item.QuestionnaireDescription
+                    </span>
+                    <span class="col-6 col-sm-3 text-body">
+                        @item.CreatedOn.ToString("dd MMMM yyyy hh:mm:tt")
+                    </span>
+                    <span class="col-6 col-sm-3 text-right">
+                        View <i class="fas fa-angle-right fa-sm ml-1"></i>
+                    </span>
+                </div>
+            </a>
+        }
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            //enableValidation("#form");
+
+            // initialization of range flatpickr
+            $('.js-range-flatpickr').each(function () {
+                var flatpickr = $.HSCore.components.HSFlatpickr.init($(this));
+            });
+        });
+    </script>
+}

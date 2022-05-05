@@ -1,0 +1,8 @@
+[
+  {
+    "outputFileName": "wwwroot/front-dashboard-v1.1/dist/assets/vendor/daterangepicker/daterangepicker.min.js",
+    "inputFiles": [
+      "wwwroot/front-dashboard-v1.1/dist/assets/vendor/daterangepicker/daterangepicker.js"
+    ]
+  }
+]

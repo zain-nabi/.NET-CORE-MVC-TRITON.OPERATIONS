@@ -1,0 +1,129 @@
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+@model EmployeeModel
+@{
+    ViewData["Title"] = "Info";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Header"] = "Corvid-19";
+    ViewData["HeaderBold"] = "Screening";
+    ViewData["Description"] = "Complete the form below to perform a screening";
+
+    var template = $"{Configuration.GetSection("URL").GetSection("template").Value}";
+}
+
+<div class="container space-top-5 space-bottom-1">
+    <form id="form" method="post" class="js-validate">
+        <h3 class="mb-4">@Model.Employee.LeaveDisplayName</h3>
+        <div class="row">
+            <div class="col-lg-4 mb-4 mb-lg-0">
+                <div class="avatar avatar-xl avatar-circle mb-3">
+                    <figure class="max-w-8rem mx-auto">
+                        <img class="img-fluid" src="@template/assets/svg/icons/icon-46.svg" alt="SVG">
+                    </figure>
+                </div>
+
+                <!-- Icon Block -->
+                <div class="media text-body font-size-1 mb-2">
+                    <div class="min-w-3rem text-center mr-2">
+                        <i class="fad fa-user"></i>
+                    </div>
+                    <div class="media-body">
+                        @Model.Employee.FullNames
+                    </div>
+                </div>
+                <!-- End Icon Block -->
+                <!-- Icon Block -->
+                <div class="media text-body font-size-1 mb-2">
+                    <div class="min-w-3rem text-center mr-2">
+                        <i class="fad fa-house-user"></i>
+                    </div>
+                    <div class="media-body">
+                        @Model.Employee.Surname
+                    </div>
+                </div>
+                <!-- End Icon Block -->
+                <!-- Icon Block -->
+                <div class="media text-body font-size-1 mb-2">
+                    <div class="min-w-3rem text-center mr-2">
+                        <i class="fad fa-passport"></i>
+                    </div>
+                    <div class="media-body">
+                        @Model.Employee.SAID
+                    </div>
+                </div>
+                <!-- End Icon Block -->
+            </div>
+
+            <div class="col-lg-8">
+                @*@foreach (var item in Model.QuestionnaireModel.QuestionsandAnswers)*@
+                @for (var i = 0; i < Model.QuestionnaireModel.QuestionsandAnswers.Count; i++)
+                {
+                    var modelQuestion = Model.QuestionnaireModel.QuestionsandAnswers[i];
+                <div class="form-group row">
+                    @*@if (modelQuestion.Question.QuestionnaireQuestionId == 7)
+        {
+            <label class="text-danger">Do you have the following symptoms?</label>
+        }*@
+                   
+                    <label class="col-sm-9 col-form-label @(modelQuestion.Question.QuestionFieldTypeLCId == 396 ? "font-weight-bold text-danger" : "")">
+                        @if (modelQuestion.Question.QuestionCategoryLCId == 397)
+                        {
+                            <i class="fad fa-circle"></i>
+                        }
+                        @modelQuestion.Question.QuestionText
+                    </label>
+                    <div class="col-sm-3">
+                        @if (modelQuestion.Question.QuestionFieldTypeLCId == 387 || modelQuestion.Question.QuestionFieldTypeLCId == 394)
+                        {
+                            <input type="text" asp-for="QuestionnaireModel.QuestionsandAnswers[i].Answer.Response" class="form-control" id="txt-@i"
+                                   data-parsley-required="@modelQuestion.Question.Required"
+                                   data-parsley-type="@modelQuestion.QuestionFieldType.Name"
+                                   data-parsley-required-message="@modelQuestion.Question.ErrorText"
+                                   data-parsley-errors-container="#errorContainer"
+                                   value="@(modelQuestion.Question.QuestionnaireQuestionId == 13 ? Model.Employee.CurrentEmployeeCode : "")"
+                                   readonly="@(modelQuestion.Question.QuestionnaireQuestionId == 13)">
+                        }
+                        else if (Model.QuestionnaireModel.QuestionsandAnswers[i].Question.QuestionFieldTypeLCId == 388)
+                        {
+                            @*<input type="checkbox" id="chk-@item.Question.QuestionFieldTypeLCId" data-parsley-errors-container="#errorContainer">*@
+                            <div class="d-flex justify-content-center align-items-center mb-5">
+                                <span class="font-size-1 text-muted"> No</span>
+
+                                <label class="toggle-switch d-flex" for="customSwitch-@Model.QuestionnaireModel.QuestionsandAnswers[i].Question.QuestionnaireQuestionId">
+                                    <input type="checkbox" asp-for="QuestionnaireModel.QuestionsandAnswers[i].Answer.Response" class="toggle-switch-input" id="customSwitch-@Model.QuestionnaireModel.QuestionsandAnswers[i].Question.QuestionnaireQuestionId">
+                                    <span class="toggle-switch-label">
+                                        <span class="toggle-switch-indicator"></span>
+                                    </span>
+                                </label>
+                                <span class="font-size-1 text-muted"> Yes</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+                    @Html.HiddenFor(x => x.QuestionnaireModel.QuestionsandAnswers[i].Answer.QuestionId)
+                    <input type="hidden" asp-for="QuestionnaireModel.QuestionsandAnswers[i].Answer.CreatedByGroupUserId" id="hdCreatedBy" value="@Model.CreatedByUserId" />
+                    <input type="hidden" asp-for="QuestionnaireModel.QuestionsandAnswers[i].Answer.CreatedOn" id="hdCreatedOn" value="@DateTime.Now" />
+                    <input type="hidden" asp-for="QuestionnaireTemplateId" id="hdCreatedOn" value="1" />
+                }
+            </div>
+        </div>
+        <div class="col-sm-12 text-sm-right">
+            <button type="submit" class="btn btn-primary transition-3d-hover">Save</button>
+            <div id="errorContainer"></div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            enableValidation("#form");
+
+            // initialization of toggle state
+            $('.js-toggle-state').each(function () {
+                var toggleState = new HSToggleState($(this)).init();
+            });
+        });
+
+    </script>
+}

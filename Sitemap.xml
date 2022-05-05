@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<mvcSiteMap>
+	<mvcSiteMapNode mainTitle="Reports" icon="far fa-clipboard-list-check">
+		<mvcSiteMapSubTitle subTitle="Reports">
+			<mvcSiteMapSubTitleChild childTitle="Covid-19" controller="Report" action="CovidBranch" />
+			<mvcSiteMapSubTitleChild childTitle="GPS Sites" controller="Report" action="GPSSites" />
+			<mvcSiteMapSubTitleChild childTitle="Tarsus Tracker" controller="Report" action="TarsusWaybillTracker" />
+		</mvcSiteMapSubTitle>
+			<mvcSiteMapSubTitle subTitle="CSA">
+			<mvcSiteMapSubTitleChild childTitle="Send Report" controller="CustomerServiceAgent" action="Overview" />
+		</mvcSiteMapSubTitle>
+	</mvcSiteMapNode>
+	<mvcSiteMapNode mainTitle="Users" icon="far fa-address-card">
+		<mvcSiteMapSubTitle subTitle="Users">
+			<mvcSiteMapSubTitleChild childTitle="Application Users" controller="ApplicationUsers" action="Users" />
+		</mvcSiteMapSubTitle>
+	</mvcSiteMapNode>
+	<mvcSiteMapNode mainTitle="Agents" icon="fal fa-address-card nav-icon">
+		<mvcSiteMapSubTitle subTitle="Agents">
+			<mvcSiteMapSubTitleChild childTitle="Road Freight Agent" controller="RoadFreightAgent" action="Search" roles="Administrator, Branch Manager" />
+		</mvcSiteMapSubTitle>
+	</mvcSiteMapNode>
+	
+	<mvcSiteMapNode mainTitle="Administration" icon="far fa-clipboard-list-check">
+		<mvcSiteMapSubTitle subTitle="Administration">
+			<mvcSiteMapSubTitleChild childTitle="Postal Codes" controller="PostalCodes" action="Search" roles="Administrator, Customer Services Manager" />
+			<mvcSiteMapSubTitleChild childTitle="Role Configuration" controller="RoleGroup" action="Overview"  roles="Administrator" />
+			<mvcSiteMapSubTitleChild childTitle="User Configuration" controller="Users" action="UsersSummary"  roles="Administrator" />
+		</mvcSiteMapSubTitle>
+	</mvcSiteMapNode>
+</mvcSiteMap>

@@ -1,0 +1,552 @@
+﻿@model Triton.Service.Model.Applications.Custom.PurchaseOrder_Overview;
+
+@{
+    ViewData["Title"] = "Upload";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int height;
+
+    //var totalIssues = Model.AgentIssueTabs.Sum(x => x.TotalAgentIssues);
+}
+
+
+<style>
+    .bd-example-modal-lg .modal-dialog {
+        display: table;
+        position: relative;
+        margin: 0 auto;
+        top: calc(50% - 24px);
+    }
+
+        .bd-example-modal-lg .modal-dialog .modal-content {
+            background-color: transparent;
+            border: none;
+        }
+
+    .center {
+        margin: auto;
+        width: 50%;
+        padding: 10px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #F9FAFC;
+    }
+</style>
+<!-- ========== MAIN ========== -->
+<main id="content" role="main" class="main">
+    @{
+        var userId = @User.FindFirst("UserID").Value;
+        var filterDate = @Model.FilterDate;
+        var name = @User.FindFirst("Name").Value;
+    }
+    <div id="loading">
+        @*<i class="fad fa-spinner-third fa-spin fa-3x" style="--fa-primary-color: #EE384E;"></i>*@
+        <div class="alert alert-danger" role="alert">
+            <div class="spinner-border " role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+    </div>
+    <div class="content container-fluid">
+
+        <!-- Page Header -->
+        <div class="js-nav-scroller hs-nav-scroller-horizontal mb-5">
+
+            <ul class="nav nav-tabs align-items-center">
+                <li class="col-sm mb-2 mb-sm-0">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb breadcrumb-no-gutter">
+                            <li class="breadcrumb-item"><a class="breadcrumb-link" href="javascript:;">Agents</a></li>
+                            <li class="breadcrumb-item"><a class="breadcrumb-link" href="javascript:;">RoadFreightAgent</a></li>
+                        </ol>
+                    </nav>
+
+                    <h1 class="page-header-title">Overview</h1>
+                <li />
+
+                <li class="nav-item ml-auto">
+                    <a class="btn btn-sm btn-outline-primary mr-2" href="@Url.Action("Search", "RoadFreightAgent")">Search</a>
+                </li>
+
+            </ul>
+        </div>
+
+        <!-- End Row -->
+        <!-- End Page Header -->
+    </div>
+    <div class="content container-fluid my-n9">
+
+        <div class="js-nav-scroller hs-nav-scroller-horizontal mb-5">
+            <span class="hs-nav-scroller-arrow-prev" style="display: none;">
+                <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+                    <i class="tio-chevron-left"></i>
+                </a>
+            </span>
+
+            <span class="hs-nav-scroller-arrow-next" style="display: none;">
+                <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+                    <i class="tio-chevron-right"></i>
+                </a>
+            </span>
+
+            <ul class="nav nav-tabs align-items-center">
+                @if (@Model.AgentIssueTabs != null)
+                {
+
+                    @for (int i = 0; i < Model.AgentIssueTabs.Count; i++)
+                    {
+
+                        if (@Model.AgentIssueTabs[i].LookupcodeID == Model.ActiveTab)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link active" href="@Url.Action("GetAgentIssuesById", "RoadFreightAgent", new  { lookupcodeId = @Model.AgentIssueTabs[i].LookupcodeID, filterDate = @Model.FilterDate, filterUserId = Model.SelectedUser })">
+                                    @Model.AgentIssueTabs[i].Issue  <span class="badge badge-soft-dark ml-1"> @Model.AgentIssueTabs[i].TotalAgentIssues</span>
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("GetAgentIssuesById", "RoadFreightAgent", new { lookupcodeId =@Model.AgentIssueTabs[i].LookupcodeID, filterDate = @Model.FilterDate, filterUserId = Model.SelectedUser })">
+                                    @Model.AgentIssueTabs[i].Issue <span class="badge badge-soft-dark ml-1"> @Model.AgentIssueTabs[i].TotalAgentIssues</span>
+                                </a>
+                            </li>
+                        }
+                    }
+
+                }
+
+            </ul>
+        </div>
+    </div>
+
+    <div class="content container-fluid my-n9">
+        @if (@Model.RoadFreightAgent.Count >= 1)
+        {
+            height = 150;
+        }
+        else
+        {
+            height = 0;
+        }
+        <div class="row">
+            <div class="col-lg-3">
+                <!-- Navbar -->
+                <div class="navbar-vertical navbar-expand-lg mb-3 mb-lg-5">
+                    <ul id="navbarSettings" class="js-sticky-block js-scrollspy navbar-nav navbar-nav-lg nav-tabs "
+                        data-hs-sticky-block-options="{
+                       &quot;parentSelector&quot;: &quot;#navbarVerticalNavMenu&quot;,
+                       &quot;breakpoint&quot;: &quot;lg&quot;,
+                       &quot;startPoint&quot;: &quot;#navbarVerticalNavMenu&quot;,
+                       &quot;endPoint&quot;: &quot;#stickyBlockEndPoint&quot;,
+                       &quot;stickyOffsetTop&quot;: 20
+                     }" style="">
+                        @for (int i = 0; i < Model.SupplierTabs.Count; i++)
+                        {
+                            if (@Model.SupplierTabs[i].SupplierID == Model.Active_Supplier_Tab)
+                            {
+                                <!-- List Item -->
+                                <li class="list-group-item nav-item">
+
+                                    <div class="media-body">
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <a class="d-flex align-items-center nav-link active" href="@Url.Action("SupplierOverview", "RoadFreightAgent", new { lookupcodeId =@Model.SupplierTabs[i].CategoryLCID, filterDate = @Model.FilterDate, userId = Model.SelectedUser, supplierId = @Model.SupplierTabs[i].SupplierID })">
+                                                    <div class="media-body">
+                                                        <span class="d-block h6 text-hover-primary">@Model.SupplierTabs[i].SupplierName</span>
+                                                        @if (@Model.SupplierTabs[i].VATVender)
+                                                        {
+                                                            <span class="badge badge-info badge-pill ml-1">Vat</span>
+                                                        }
+                                                    </div>
+                                                </a>
+                                            </div>
+
+                                            <div class="col-sm-4 text-right">
+                                                <a class="align-items-center" href="@Url.Action("SupplierOverview", "RoadFreightAgent", new { lookupcodeId =@Model.SupplierTabs[i].CategoryLCID, filterDate = @Model.FilterDate, userId = Model.SelectedUser, supplierId = @Model.SupplierTabs[i].SupplierID })">
+                                                    <div class="media-body">
+                                                        <span class="d-block h5 text-hover-primary  mb-0 font-weight-normal">@Model.SupplierTabs[i].SumSubtotal</span>
+                                                        <span class="badge badge-soft-dark  ml-2">@Model.SupplierTabs[i].Totals</span>
+                                                    </div>
+
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <!-- End Row -->
+                                    </div>
+
+                                </li>
+
+                                <!-- End List Item -->
+
+                            }
+
+                            else
+                            {
+                                <!-- List Item -->
+                                <li class="list-group-item nav-item">
+
+                                    <div class="media-body">
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <a class="align-items-center" href="@Url.Action("SupplierOverview", "RoadFreightAgent", new { lookupcodeId =@Model.SupplierTabs[i].CategoryLCID, filterDate = @Model.FilterDate, userId = Model.SelectedUser, supplierId = @Model.SupplierTabs[i].SupplierID })">
+                                                    <div class="media-body">
+                                                        <span class="d-block h6 text-hover-primary  mb-0">@Model.SupplierTabs[i].SupplierName</span>
+                                                        @if (@Model.SupplierTabs[i].VATVender)
+                                                        {
+                                                            <span class="badge badge-info badge-pill ml-1">Vat</span>
+                                                        }
+                                                    </div>
+                                                </a>
+                                            </div>
+
+                                            <div class="col-sm-4 text-right">
+                                                <a class="align-items-center" href="@Url.Action("SupplierOverview", "RoadFreightAgent", new { lookupcodeId =@Model.SupplierTabs[i].CategoryLCID, filterDate = @Model.FilterDate, userId = Model.SelectedUser, supplierId = @Model.SupplierTabs[i].SupplierID })">
+                                                    <div class="media-body">
+                                                        <span class="d-block h5 text-hover-primary mb-0 font-weight-normal">@Model.SupplierTabs[i].SumSubtotal</span>
+                                                        <span class="badge badge-soft-dark  ml-2">@Model.SupplierTabs[i].Totals</span>
+                                                    </div>
+
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <!-- End Row -->
+                                    </div>
+
+                                </li>
+
+                                <!-- End List Item -->
+                            }
+
+                        }
+                    </ul>
+                </div>
+                <!-- End Navbar -->
+            </div>
+
+            <div class="col-lg-9">
+                <form method="post" class="js-validate" asp-controller="RoadFreightAgent" asp-action="MoveToPaid">
+                    <!-- Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row justify-content-between align-items-center flex-grow-1">
+                                <div class="col-sm-6 col-md-4 mb-3 mb-sm-0">
+                                    <form>
+                                        <!-- Search -->
+                                        <div class="input-group input-group-merge input-group-flush">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <i class="tio-search"></i>
+                                                </div>
+                                            </div>
+                                            <input id="datatableSearch" type="search" class="form-control" placeholder="Filter results" aria-label="Filter results">
+                                        </div>
+                                        <!-- End Search -->
+                                    </form>
+                                </div>
+                                <div class="col-sm-6 d-flex justify-content-end">
+                                    <div class="mr-2">
+                                        <span class="legend-indicator bg-info"></span>Invoice
+                                    </div>
+                                    <div class="mr-2">
+                                        <span class="legend-indicator bg-primary"></span>Freightware
+                                    </div>
+                                    <!-- Datatable Info -->
+                                    <div id="datatableWithCheckboxSelectCounterInfo" style="display: none;">
+                                        <div class="d-flex align-items-center">
+                                            <span class="font-size-sm mr-3" style="margin-top: -12px;">
+                                                <span id="datatableWithCheckboxSelectCounter">0</span>
+                                                Selected
+                                            </span>
+
+                                            <input type="submit" id="Save" value="Paid" class="btn  btn-primary btn-sm" onclick="ChangeDataTableLength();" />
+
+                                        </div>
+
+                                    </div>
+                                    <!-- End Datatable Info -->
+
+                                </div>
+
+                                <!-- Unfold -->
+
+                                <div class="hs-unfold">
+
+                                    <a class="js-hs-unfold-invoker btn btn-sm btn-white dropdown-toggle" href="javascript:;" data-hs-unfold-options="{
+                                                   &quot;target&quot;: &quot;#usersExportDropdown&quot;,
+                                                   &quot;type&quot;: &quot;css-animation&quot;
+                                                 }" data-hs-unfold-target="#usersExportDropdown" data-hs-unfold-invoker="">
+                                        <i class="tio-download-to mr-1"></i> Export
+                                    </a>
+
+                                    <div id="usersExportDropdown" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right hs-unfold-hidden hs-unfold-content-initialized hs-unfold-css-animation animated hs-unfold-reverse-y" data-hs-target-height="275" data-hs-unfold-content="" data-hs-unfold-content-animation-in="slideInUp" data-hs-unfold-content-animation-out="fadeOut" style="animation-duration: 300ms;">
+                                        <span class="dropdown-header">Options</span>
+                                        <a id="export-copy" class="dropdown-item" href="javascript:;">
+                                            <img class="avatar avatar-xss avatar-4by3 mr-2" src="~/front-dashboard-v1.1/dist/assets/svg/illustrations/copy.svg" alt="Image Description">
+                                            Copy
+                                        </a>
+                                        <a id="export-print" class="dropdown-item" href="javascript:;">
+                                            <img class="avatar avatar-xss avatar-4by3 mr-2" src="~/front-dashboard-v1.1/dist/assets/svg/illustrations/print.svg" alt="Image Description">
+                                            Print
+                                        </a>
+                                        <div class="dropdown-divider"></div>
+                                        <span class="dropdown-header">Download options</span>
+                                        <a id="export-excel" class="dropdown-item" href="javascript:;">
+                                            <img class="avatar avatar-xss avatar-4by3 mr-2" src="~/front-dashboard-v1.1/dist/assets/svg/brands/excel.svg" alt="Image Description">
+                                            Excel
+                                        </a>
+                                        <a id="export-csv" class="dropdown-item" href="javascript:;">
+                                            <img class="avatar avatar-xss avatar-4by3 mr-2" src="~/front-dashboard-v1.1/dist/assets/svg/components/placeholder-csv-format.svg" alt="Image Description">
+                                            .CSV
+                                        </a>
+
+                                    </div>
+                                </div>
+                                <!-- End Unfold -->
+
+                            </div>
+                        </div>
+                        <div class="table-responsive datatable-custom">
+                            <div id="exportOptionsDatatables_wrapper" class="dataTables_wrapper">
+                                <table id="datatableWithCheckboxSelect" class="table table-sm table-borderless table-thead-bordered table-nowrap table-align-middle card-table" style="margin-bottom: @(height + "px");width:100%;"
+                                       data-hs-datatables-options='{
+                     "order": [1, "asc"],
+                     "columnDefs": [ {
+                            "targets":[0, 7],
+                            "orderable": false
+                     } ],
+                     "info": {
+                       "totalQty": "#datatableWithPaginationInfoTotalQty"
+                     },
+                     "search": "#datatableSearch",
+                     "entries": "#datatableEntries",
+                     "pageLength": 8,
+                     "isResponsive": false,
+                     "isShowPaging": true,
+                     "pagination": "datatablePagination"
+                   }'>
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th class="table-column-pr-0">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input id="datatableWithCheckboxSelectAll" type="checkbox" class="custom-control-input">
+                                                    <label class="custom-control-label" for="datatableWithCheckboxSelectAll"></label>
+                                                </div>
+                                            </th>
+                                            <th>Waybill No</th>
+
+                                            <th class="text-right">Inv Surcharge</th>
+                                            <th class="text-right">Amt excl</th>
+                                            <th class="text-right">Amt incl</th>
+                                            <th class="text-right">FW  Total</th>
+                                            <th class="text-left">Status</th>
+
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="font-size-1">
+                                        @for (int i = 0; i < @Model.RoadFreightAgent.Count; i++)
+
+                                        {
+                                            var surcharge = String.Format("{0:C2}", @Model.RoadFreightAgent[i].Surcharge);
+                                            var subTotal = String.Format("{0:C2}", @Model.RoadFreightAgent[i].Subtotal);
+                                            var fWWayBillTotal = String.Format("{0:C2}", @Model.RoadFreightAgent[i].FWChargeExVat);
+
+                                            var badgeColor = "success";
+                                            if (@Model.RoadFreightAgent[i].StatusLCID != 634 && @Model.RoadFreightAgent[i].StatusLCID != 633)
+                                            {
+                                                badgeColor = "danger";
+                                            }
+                                            <tr>
+                                                <td class="table-column-pr-0">
+                                                    <div class="custom-control custom-checkbox">
+                                                        @Html.CheckBoxFor(model => @Model.RoadFreightAgent[i].IsChecked, new { id = @Model.RoadFreightAgent[i].RoadFreightAgentID, @class = "custom-control-input" })
+                                                        @*<input name="check" type="checkbox" asp-for="@Model.RepsActiveCustomerModelList[i].IsChecked" checked class="custom-control-input" id="@Model.RepsActiveCustomerModelList[i].CustomerID">*@
+                                                        <input type="hidden" value="@Model.RoadFreightAgent[i].IsChecked" asp-for="@Model.RoadFreightAgent[i].IsChecked" />
+                                                        <input type="hidden" value="@Model.RoadFreightAgent[i].RoadFreightAgentID" asp-for="@Model.RoadFreightAgent[i].RoadFreightAgentID" />
+                                                        <label class="custom-control-label" for="@Model.RoadFreightAgent[i].RoadFreightAgentID"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="align-middle text-left">
+                                                    <a class="d-flex align-items-center">
+                                                        @{
+                                                            var status = string.IsNullOrEmpty(@Model.RoadFreightAgent[i].Status) ? "N/A" : @Model.RoadFreightAgent[i].Status;
+                                                            var color = "soft-info";
+
+                                                            if (status != "N/A")
+                                                            {
+                                                                if (status.Equals("Query"))
+                                                                {
+                                                                    color = "soft-primary";
+                                                                }
+                                                                else if (status.Equals("Unpaid"))
+                                                                {
+                                                                    color = "soft-danger";
+                                                                }
+                                                                else if (status.Equals("BM Approved"))
+                                                                {
+                                                                    color = "soft-warning";
+                                                                }
+                                                                else if (status.Equals("Paid"))
+                                                                {
+                                                                    color = "soft-success";
+                                                                }
+                                                            }
+                                                        }
+                                                        <div class="avatar avatar-sm avatar-@color avatar-circle mr-3">
+
+                                                            <span class="avatar-initials">@status.Substring(0, 1)</span>
+                                                        </div>
+
+                                                        <div class="media-body">
+
+                                                            <span class="d-block h5 text-hover-primary mb-0">@Model.RoadFreightAgent[i].WaybillNo</span>
+                                                            <span class="d-block font-size-sm text-body">@Model.RoadFreightAgent[i].FromRateArea <i class="fas fa-arrow-circle-right"></i> @Model.RoadFreightAgent[i].ToRateArea</span>
+                                                        </div>
+
+                                                    </a>
+                                                </td>
+
+
+                                                <td class="align-middle text-right">
+                                                    <span class="text-info">@surcharge</span>
+                                                </td>
+
+                                                <td class="align-middle text-right">
+                                                    <span class="text-info">@subTotal</span>
+                                                </td>
+
+                                                <td class="align-middle text-right">
+                                                    <span class="text-info">@Model.RoadFreightAgent[i].Total</span>
+                                                </td>
+                                                <td class="align-middle text-right">
+                                                    <span class="text-primary">@fWWayBillTotal</span>
+                                                </td>
+                                                <td class="align-middle text-left">
+                                                    @if (string.IsNullOrEmpty(status))
+                                                    {
+                                                        <span>N/A</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge badge-@color badge-pill ml-1">@Model.RoadFreightAgent[i].Status</span>
+                                                    }
+                                                </td>
+
+
+                                                <td class="align-middle">
+                                                    <a class="btn btn-sm btn-white" target="_blank" href="@Url.Action("RoadFreightAgentSummary", "RoadFreightAgent", new { roadFreightAgentId = @Model.RoadFreightAgent[i].RoadFreightAgentID, filterDate = @Model.FilterDate, filteredUserId = Model.SelectedUser })">
+                                                        <i class="fal fa-edit mr-2"></i> Edit
+                                                    </a>
+                                                </td>
+
+                                                @Html.HiddenFor(x => @Model.RoadFreightAgent[i].RoadFreightAgentID)
+                                                @Html.HiddenFor(x => @Model.RoadFreightAgent[i].SupplierDate)
+                                                @Html.HiddenFor(x => @Model.RoadFreightAgent[i].WaybillNo)
+                                                @Html.HiddenFor(x => @Model.RoadFreightAgent[i].Volumetric)
+                                                @Html.HiddenFor(x => @Model.RoadFreightAgent[i].Mass)
+                                                @Html.HiddenFor(x => @Model.RoadFreightAgent[i].Surcharge)
+                                                @Html.HiddenFor(x => @Model.RoadFreightAgent[i].Subtotal)
+                                                @Html.HiddenFor(x => @Model.RoadFreightAgent[i].Vat)
+                                                @Html.HiddenFor(x => @Model.RoadFreightAgent[i].Total)
+                                                @Html.HiddenFor(x => @Model.RoadFreightAgent[i].Invoice)
+                                                @Html.HiddenFor(x => @Model.RoadFreightAgent[i].CategoryLCID)
+                                                @Html.HiddenFor(x => @Model.RoadFreightAgent[i].SupplierID)
+                                                @Html.HiddenFor(x => @Model.RoadFreightAgent[i].StatusLCID)
+                                                @Html.HiddenFor(x => @Model.RoadFreightAgent[i].WaybillID)
+                                                @Html.HiddenFor(x => @Model.RoadFreightAgent[i].CreatedByUserID)
+                                                @Html.HiddenFor(x => @Model.RoadFreightAgent[i].DeletedByUserID)
+                                                @Html.HiddenFor(x => @Model.RoadFreightAgent[i].DeletedOn)
+                                                @Html.HiddenFor(x => @Model.RoadFreightAgent[i].IsChecked)
+                                                @Html.HiddenFor(x => @Model.RoadFreightAgent[i].CreatedOn)
+
+                                                @Html.HiddenFor(x => @Model.ActiveTab)
+                                                @Html.HiddenFor(x => @Model.SelectedUser, new { Value = @userId })
+                                                @Html.HiddenFor(x => @Model.FilterDate, new { Value = @filterDate })
+                                                @Html.HiddenFor(x => @Model.LookUpCodeID)
+                                                @Html.HiddenFor(x => @Model.Active_Supplier_Tab)
+                                                @Html.HiddenFor(x => @Model.ActiveTab)
+
+                                            </tr>
+
+
+
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- End Table -->
+                        <!-- Footer -->
+                        <div class="card-footer">
+                            <!-- Pagination -->
+                            <div class="row justify-content-center justify-content-sm-between align-items-sm-center">
+                                <div class="col-sm mb-2 mb-sm-0">
+                                    <div class="d-flex justify-content-center justify-content-sm-start align-items-center">
+                                        <span class="mr-2">Showing:</span>
+
+                                        <select id="datatableEntries" class="js-select2-custom"
+                                                data-hs-select2-options='{
+                              "minimumResultsForSearch": "Infinity",
+                              "customClass": "custom-select custom-select-sm custom-select-borderless",
+                              "dropdownAutoWidth": true,
+                              "width": true
+                            }'>
+                                            <option value="8" selected>8</option>
+                                            <option value="20">20</option>
+                                            <option value="30">30</option>
+                                            <option value="-1">All</option>
+                                        </select>
+                                        <span class="text-secondary mr-2">of</span>
+                                        <span id="datatableWithPaginationInfoTotalQty"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-auto">
+                                    <div class="d-flex justify-content-center justify-content-sm-end">
+                                        <!-- Pagination -->
+                                        <nav id="datatablePagination" aria-label="Activity pagination"></nav>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End Pagination -->
+                        </div>
+                        <!-- End Footer -->
+
+                    </div>
+
+                    <!-- End Card -->
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+</main>
+<!-- ========== END MAIN ========== -->
+
+
+@section scripts{
+
+    <script>
+        function ChangeDataTableLength() {
+            table = $('#datatableWithCheckboxSelect').DataTable({
+                retrieve: true
+            });
+            table.page.len(-1).draw();
+        }
+    </script>
+
+
+    <script>
+        $(window).on('load', function () {
+            $('#loading').hide();
+        });
+
+        $(document).on('ready', function () {
+
+        });
+
+
+    </script>
+}

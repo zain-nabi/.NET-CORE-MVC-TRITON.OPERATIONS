@@ -1,0 +1,248 @@
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+
+@model Triton.Operations.Models.EmployeeGiftModel
+
+
+@{
+    ViewData["Title"] = "Index";
+    var template = "../front/front-v3.2.1";
+}
+
+
+<style>
+    .invalid-input {
+        width: 100%;
+        margin-top: 0.25rem;
+        font-size: 80%;
+        color: #ed4c78;
+    }
+
+    #descriptionTextBox {
+        width: 200px;
+    }
+
+    #JobCategoryDropdownList {
+        padding-top: 5px;
+    }
+</style>
+@functions {
+
+    private void RenderLeftBarItems(string label, string value, string icon)
+    {
+        <li class="nav-item">
+            <a class="nav-link">
+                <i class="fas fa-@icon nav-icon"></i>
+                @label
+                <span class="badge-pill nav-link-badge">@value</span>
+            </a>
+        </li>
+    }
+}
+<main id="content" role="main" class="bg-light">
+    <!-- Breadcrumb Section -->
+    <div class="bg-navy" style="background-image: url(@LocalisationService.HtmlTemplate/assets/svg/components/abstract-shapes-20.svg);">
+        <div class="container space-1 space-top-lg-2 space-bottom-lg-3">
+            <div class="row align-items-center">
+                <div class="col">
+                    <div class="d-none d-lg-block">
+                        <h1 class="h2 text-white">Employee Gifts</h1>
+                    </div>
+
+                    <!-- Breadcrumb -->
+                    <ol class="breadcrumb breadcrumb-light breadcrumb-no-gutter mb-0">
+                        <li class="breadcrumb-item">Employee </li>
+                        <li class="breadcrumb-item active" aria-current="page">Gifts</li>
+                    </ol>
+                    <!-- End Breadcrumb -->
+                </div>
+
+                <div class="col-auto">
+                    <!-- Responsive Toggle Button -->
+                    <button type="button" class="navbar-toggler btn btn-icon btn-sm rounde-circle d-lg-none" aria-label="Toggle navigation" aria-expanded="false" aria-controls="sidebarNav" data-toggle="collapse" data-target="#sidebarNav">
+                        <span class="navbar-toggler-default">
+                            <svg width="14" height="14" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+                                <path fill="currentColor" d="M17.4,6.2H0.6C0.3,6.2,0,5.9,0,5.5V4.1c0-0.4,0.3-0.7,0.6-0.7h16.9c0.3,0,0.6,0.3,0.6,0.7v1.4C18,5.9,17.7,6.2,17.4,6.2z M17.4,14.1H0.6c-0.3,0-0.6-0.3-0.6-0.7V12c0-0.4,0.3-0.7,0.6-0.7h16.9c0.3,0,0.6,0.3,0.6,0.7v1.4C18,13.7,17.7,14.1,17.4,14.1z"></path>
+                            </svg>
+                        </span>
+                        <span class="navbar-toggler-toggled">
+                            <svg width="14" height="14" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+                                <path fill="currentColor" d="M11.5,9.5l5-5c0.2-0.2,0.2-0.6-0.1-0.9l-1-1c-0.3-0.3-0.7-0.3-0.9-0.1l-5,5l-5-5C4.3,2.3,3.9,2.4,3.6,2.6l-1,1 C2.4,3.9,2.3,4.3,2.5,4.5l5,5l-5,5c-0.2,0.2-0.2,0.6,0.1,0.9l1,1c0.3,0.3,0.7,0.3,0.9,0.1l5-5l5,5c0.2,0.2,0.6,0.2,0.9-0.1l1-1 c0.3-0.3,0.3-0.7,0.1-0.9L11.5,9.5z"></path>
+                            </svg>
+                        </span>
+                    </button>
+                    <!-- End Responsive Toggle Button -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Breadcrumb Section -->
+    <!-- Content Section -->
+    <div class="container space-2 space-top-lg-0 mt-lg-n10">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <form method="post" class="" name="form1" role="form" id="form1" asp-action="Index" asp-controller="EmployeeGifts">
+                    <!-- Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-header-title">Add Employee Gift</h5>
+                        </div>
+
+                        <div class="card-body">
+                            @if (Model.ErrorMessage != null)
+                            {
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <strong>@Model.ErrorMessage</strong> .
+
+                                </div>
+                            }
+                            <!-- Form Group -->
+                            <div class="row form-group js-form-message mb-4">
+                                <label class="col-sm-3 col-form-label input-label">Employee Code</label>
+                                <div class="col-sm-4 js-form-message mb-4">
+                                    <input id="employeeCodeTextBox" type="text" class="form-control stringValidation" required
+                                           data-msg="Please enter employee Code." placeholder="Search By Employee Code e.g. ram1" aria-label="Current Value">
+                                    <div id="signinDescription-error" class="invalid-feedback">Please enter employee Code.</div>
+                                    <span id="employeeCodeErrorMessage" class="theme-tritonexpress-errormessage">Please search by Employee Code</span>
+                                </div>
+
+                            </div>
+
+                            <div class="row form-group">
+                                <label class="col-sm-3 col-form-label input-label">Description Item</label>
+
+                                <div class="col-sm-4 js-form-message mb-4">
+                                    <div id="JobCategoryDropdownList" class="select2-selection ">
+                                        <select class="js-custom-select theme-tritonexpress-dropdown" onchange="selectTextOnDropdown()">
+                                            @foreach (var item in Model.LookUpCodes)
+                                            {
+                                                <option data-select2-id="@item.LookUpCodeID">@item.Name</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer d-flex justify-content-end">
+                                <a class="btn btn-white" href="@Url.Action("GetAllEmployeeGifts", "EmployeeGifts")">Cancel</a>
+                                <span class="mx-2"></span>
+                                <button type="submit" id="saveButton" class="btn btn-primary">Save Changes</button>
+                            </div>
+                            <input type="hidden" id="hiddenSelectValueLookUpCode" asp-for="@Model.EmployeeGifts.Item" />
+                            <input type="hidden" id="hiddentextEmployeeCode" asp-for="@Model.EmployeeGifts.EmployeeCode" />
+
+                        </div>
+                    </div>
+
+                </form>
+                <!-- End Card -->
+            </div>
+        </div>
+        <!-- End Row -->
+    </div>
+    <!-- End Content Section -->
+</main>
+
+
+@section scripts {
+    <!-- JS Implementing Plugins -->
+    <script src="@template/assets/vendor/select2/dist/js/select2.full.js"></script>
+    <script src="@template/assets/vendor/select2/dist/js/select2.js"></script>
+    <script src="@template/assets/vendor/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="@template/assets/js/hs.datatables.js"></script>
+    <script src="~/libs/js/bootstrap3-typeahead.min.js"></script>
+
+    <script>
+        $(document).on('ready',
+            function () {
+
+                $("#form1").validate({
+
+                    errorClass: 'invalid-input'
+                });
+
+                hideSpanEmployeeCodeMessage();
+
+                $("#employeeCodeTextBox").keypress(function () {
+                    hideSpanEmployeeCodeMessage();
+                    $(".alert").hide();
+                });
+
+                jQuery.validator.addClassRules('numberValidation',
+                    {
+                        required: true,
+                        number: true
+                    });
+
+                selectTextOnDropdown();
+                Save();
+
+                TriggerTypeHead("employeeCodeTextBox", "hiddentextEmployeeCode");
+
+                $('.js-custom-select').select2({
+                    sorter: data => data.sort((a, b) => a.text.localeCompare(b.text)),
+                    minimumResultsForSearch: 4
+
+                });
+            });
+
+        function selectTextOnDropdown() {
+            var selectText = $(".js-custom-select option:selected").text();
+            $("#hiddenSelectValueLookUpCode").attr("value", selectText);
+
+        }
+
+
+        function Save() {
+            $("#saveButton").on("click", function (e) {
+                if ($("#hiddentextEmployeeCode").val() == '') {
+                    e.preventDefault(e);
+                    $("#employeeCodeTextBox").val('');
+                    $("#employeeCodeErrorMessage").show();
+                }
+            });
+        }
+
+        function TriggerTypeHead(textBoxID, hiddenTextBoxID) {
+
+            $("#" + textBoxID).typeahead({
+                minLength: 3,
+                source: function (request, response) {
+                    $.ajax({
+                        url: "/EmployeeGifts/GetAllEmployeesBranches/",
+                        data: { "employeeCode": request },
+                        type: "GET",
+                        contentType: "json",
+                        success: function (data) {
+                            if (data.length > 0) {
+                                items = []; map = {};
+                                $.each(data, function (i, item) {
+                                    var id = item.currentEmployeeCode;
+                                    var name = item.currentEmployeeCode + " - " + item.fullNames + " - " + item.surname + " -  " + item.branchName;
+                                    map[name] = { id: id, name: name };
+                                    items.push(name);
+                                });
+                                response(items);
+                            } else {
+                                $("#" + textBoxID).val('');
+                                $("#" + hiddenTextBoxID).attr("value", "");
+                            }
+                        }
+                    });
+                },
+                updater: function (item) {
+                    var selectedShortCode = map[item].id;
+                    // alert(selectedShortCode);
+                    // Set the text to our selected id
+                    $("#" + hiddenTextBoxID).attr("value", selectedShortCode);
+                    return item;
+                }
+            });
+
+        }
+
+        function hideSpanEmployeeCodeMessage() {
+            $("#employeeCodeErrorMessage").css("display", "none");
+        }
+    </script>
+}

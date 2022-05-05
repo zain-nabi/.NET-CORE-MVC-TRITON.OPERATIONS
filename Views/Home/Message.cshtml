@@ -1,0 +1,74 @@
+﻿@model Triton.Model.Utils.MessageModel
+@{
+    ViewData["Title"] = "Message";
+}
+
+@if (Model.Type == null)
+{
+    <main id="content" role="main" class="main">
+        <div class="content container-fluid">
+            <!-- Message Body -->
+            <div id="checkoutStepSuccessMessage" style="">
+                <div class="text-center">
+                    <i class="@Model.Icon fa-5x mb-3"></i>
+                    <div class="mb-4">
+                        <h2>@Model.Title</h2>
+                    </div>
+                    @if (Model.ScientificNotionMessage != "N/A" && Model.ScientificNotionMessage != null)
+                    {
+                        <span class="badge badge-soft-danger badge-pill ml-1">@Model.ScientificNotionMessage </span><br />
+                        <span><a href="https://support.microsoft.com/en-us/office/split-text-into-different-columns-with-the-convert-text-to-columns-wizard-30b14928-5550-41f5-97ca-7a3e9c363ed7" target="_blank">Click here </a>if you require more information.</span><br /><br />
+
+                    }
+                    <a class="btn btn-primary" href="@Model.Url">@Model.ButttonText </a>
+                </div>
+            </div>
+            <!-- End Message Body -->
+        </div>
+    </main>
+}
+else
+{
+    <main id="content" role="main" class="main">
+        <!-- Content -->
+        <div class="content container-fluid">
+            <div class="row align-items-sm-center py-sm-10">
+                <div class="col-sm-6">
+                    <div class="text-center text-sm-right mr-sm-4 mb-5 mb-sm-0">
+                        <img class="w-60 w-sm-100 mx-auto" src="~/front-dashboard-v1.1/src/assets/svg/illustrations/think.svg" alt="Image Description" style="max-width: 15rem;">
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-md-4 text-center text-sm-left">
+                    <h1 class="display-1 mb-0">404</h1>
+                    <p class="lead">@Model.Title</p>
+
+
+                    <a class="btn btn-primary" href="@Model.Url">Continue</a>
+                </div>
+            </div>
+            <!-- End Row -->
+        </div>
+        <!-- End Content -->
+    </main>
+    <!--<main class="bg-img-hero-fixed" style="background-image: url(@Model.RootPath/front/front-v3.2.1/assets/svg/illustrations/error-number-404.svg);">-->
+    <!-- ========== MAIN ========== -->
+    <!--<div id="content" role="main">-->
+    <!-- Hero Section -->
+    <!--<div class="d-lg-flex">
+        <div class="container d-lg-flex align-items-lg-center min-vh-lg-100 space-4">
+            <div class="w-lg-60 w-xl-50">-->
+    <!-- Title -->
+    <!--<div class="mb-4">
+        <img class="max-w-23rem mb-3" src="@Model.RootPath/front/front-v3.2.1/assets/svg/illustrations/error-number-404.svg">
+        <p class="lead">@Model.Message</p>
+    </div>-->
+    <!-- End Title -->
+    <!--</div>
+        </div>
+    </div>-->
+    <!-- End Hero Section -->
+    <!--</div>-->
+    <!-- ========== END MAIN ========== -->
+    <!--</main>-->
+}

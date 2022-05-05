@@ -1,0 +1,328 @@
+﻿@model Triton.Operations.Models.RoadFreightAgentViewModel;
+
+@{
+    ViewData["Title"] = "Upload";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int height;
+
+    //var totalIssues = Model.AgentIssueTabs.Sum(x => x.TotalAgentIssues);
+}
+
+
+<!-- ========== MAIN ========== -->
+<main id="content" role="main" class="main">
+    @{
+        var userId = @User.FindFirst("UserID").Value;
+        var filterDate = @Model.FilterDate;
+    }
+    <div id="loading">
+        @*<i class="fad fa-spinner-third fa-spin fa-3x" style="--fa-primary-color: #EE384E;"></i>*@
+        <div class="alert alert-danger" role="alert">
+            <div class="spinner-border " role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+    </div>
+    <div class="content container-fluid">
+
+        <!-- Page Header -->
+        <div class="js-nav-scroller hs-nav-scroller-horizontal mb-5">
+
+            <ul class="nav nav-tabs align-items-center">
+                <li class="col-sm mb-2 mb-sm-0">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb breadcrumb-no-gutter">
+                            <li class="breadcrumb-item"><a class="breadcrumb-link" href="javascript:;">Agents</a></li>
+                            <li class="breadcrumb-item"><a class="breadcrumb-link" href="javascript:;">Road Freight Agent</a></li>
+                        </ol>
+                    </nav>
+
+                    <h1 class="page-header-title">Search</h1>
+                <li />
+
+            </ul>
+        </div>
+
+        <!-- End Row -->
+        <!-- End Page Header -->
+    </div>
+    <div class="content container-fluid my-n9">
+
+        <!-- Filter -->
+        <form class="js-validate" method="post" asp-action="Search" asp-controller="RoadFreightAgent">
+            @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+            {
+                <div class="alert alert-soft-danger alert-dismissible fade show" role="alert">
+                    <strong>
+                        @Model.ErrorMessage
+
+                    </strong>
+
+                </div>
+            }
+            <div style="width:30%" class="theme-tritonexpress-searchcenter">
+                <center>
+                    <!-- Input Group -->
+
+                    <div class="input-group js-form-message mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Date</span>
+                        </div>
+
+                        @Html.TextBoxFor(m => m.FilterDate, new { id = "js-daterangepicker-predefined", @class = "btn btn-white dropdown-toggle", style = "width:300px;", @required = "required", onChange = "onClickDateRange();" })
+
+                        <div class="input-group-append">
+                            <button id="btnSubmit" type="submit" class="btn btn-icon btn-primary"><i class="tio-search"></i></button>
+                        </div>
+                    </div>
+                </center>
+                <!-- End Input Group -->
+                <input type="hidden" value="@userId" asp-for="@Model.UserID" />
+            </div>
+            <!-- End Filter -->
+        </form>
+
+
+    </div>
+
+    <div class="content container-fluid my-n5">
+        <div class="card">
+            <div class="card-body">
+                <!-- Hero Section -->
+                <div class="container space-2">
+                    <div class="row justify-content-lg-between align-items-lg-center">
+                        <div class="col-sm-10 col-lg-5 mb-7 mb-lg-0">
+                            <img class="img-fluid" src="~/front-dashboard-v1.1/dist/assets/svg/illustrations/reading.svg" alt="Image Description">
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-5">
+                                <h1 class="display-4 mb-3">
+                                    RoadFreight Agent
+                                    <br>
+                                    <span class="text-primary font-weight-bold">
+                                        <span class="js-text-animation"></span>
+                                    </span>
+                                </h1>
+                                <p class="lead">Complete the filters above to view the report</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Hero Section -->
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+</main>
+
+
+@section scripts{
+
+    <script>
+        function ChangeDataTableLength() {
+            table = $('#datatableWithCheckboxSelect').DataTable({
+                retrieve: true
+            });
+            table.page.len(-1).draw();
+        }
+    </script>
+
+    <script>
+        $(window).on('load', function () {
+            $('#loading').hide();
+        });
+
+        $(document).on('ready', function () {
+
+
+        });
+
+
+        (function ($) {
+            'use strict';
+
+            $.HSCore.components.HSDropzone = {
+                defaults: {
+                    // Default variables
+                    url: "/PurchaseOrder/UploadPurchaseOrder",
+                    thumbnailWidth: 300,
+                    autoDiscover: false,
+                    uploadMultiple: true,
+                    autoProcessQueue: false,
+                    parallelUploads: 10,
+                    paramName: function myParamName() {
+                        return "File";
+                    },
+                    thumbnailHeight: 300,
+                    accept: function (file, done) {
+                        if (file.name.substring(file.name.indexOf('.')) !== ".xlsx") {
+                            done("Please upload a excel file format");
+                        }
+                        else {
+
+                            done();
+                        }
+                    },
+                    previewTemplate: $('<div>' +
+                        '  <div class="col h-100 px-1 mb-2">' +
+                        '    <div class="dz-preview dz-file-preview">' +
+                        '      <div class="d-flex justify-content-end dz-close-icon">' +
+                        '        <small class="tio-clear" data-dz-remove></small>' +
+                        '      </div>' +
+                        '      <div class="dz-details media">' +
+                        '        <div class="dz-img">' +
+                        '         <img class="img-fluid dz-img-inner" data-dz-thumbnail>' +
+                        '        </div>' +
+                        '        <div class="media-body dz-file-wrapper">' +
+                        '         <h6 class="dz-filename">' +
+                        '          <span class="dz-title" data-dz-name></span>' +
+                        '         </h6>' +
+                        '         <div class="dz-size" data-dz-size></div>' +
+                        '        </div>' +
+                        '      </div>' +
+                        '      <div class="dz-progress progress">' +
+                        '        <div class="dz-upload progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" data-dz-uploadprogress></div>' +
+                        '      </div>' +
+                        '      <div class="d-flex align-items-center">' +
+                        '        <div class="dz-success-mark">' +
+                        '          <span class="tio-checkmark-circle"></span>' +
+                        '        </div>' +
+                        '      </div>' +
+                        '    </div>' +
+                        '  </div>' +
+                        '</div>').html()
+                },
+
+                init: function (el, options) {
+                    if (!el.length) return;
+
+                    var context = this,
+                        $el = $(el),
+                        defaults = Object.assign({}, context.defaults),
+                        dataSettings = $el.attr('data-hs-dropzone-options') ? JSON.parse($el.attr('data-hs-dropzone-options')) : {},
+                        settings = {
+                            init: function () {
+                                var $this = this,
+                                    $message = $($this.element).find('.dz-message');
+
+                                $this.on('addedfile', function (file) {
+                                    if (String(file.type).slice(0, 6) !== 'image/') {
+                                        $(file.previewElement).find('.dz-img').replaceWith('<span class="dz-file-initials">' + file.name.substring(0, 1).toUpperCase() + '</span>');
+                                    }
+
+                                    $message.hide();
+                                });
+
+                                $this.on('removedfile', function () {
+                                    if ($this.files.length <= 0) {
+                                        $message.show();
+                                    }
+                                });
+
+                                $this.on("error", function (file, message) {
+                                    var fileExtension = file.name.substring(file.name.indexOf('.'));
+                                    if (fileExtension !== '.xlsx') {
+                                        document.getElementById('ErrorMessages').innerHTML = message;
+                                        this.removeFile(file);
+                                    }
+                                    else {
+                                        document.getElementById('ErrorMessages').innerHTML = "";
+                                    }
+
+                                });
+
+                                var submitButton = document.querySelector("#submit");
+                                var myDropzone = this; //closure
+
+                                submitButton.addEventListener("click", function (e) {
+
+                                    if (myDropzone.files.length !== 0) {
+
+                                        e.preventDefault();
+                                        myDropzone.processQueue();
+                                        $('#exampleModal').modal('hide');
+                                        $('#loading').show();;
+
+                                        $this.on("success", function (file, responseText) {
+                                            $('#loading').modal('hide');
+                                            window.location.href = "/Home/Message?type=" + responseText.message + "&url=" + responseText.url;
+                                        });
+
+                                    } else {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        $('#addForm').submit();
+
+                                    }
+
+                                });
+
+                                $this.on("sending", function (file, xhr, formData) {
+                                    $('#addForm').find('input').each(function () {
+                                        formData.append($(this).attr('name'), $(this).val());
+                                    });
+                                });
+                            }
+                        };
+                    settings = $.extend(true, defaults, settings, dataSettings, options);
+
+                    /* Start : Init */
+
+                    var newDropzone = new Dropzone(el, settings);
+
+                    /* End : Init */
+
+                    return newDropzone;
+                }
+
+            };
+
+        })(jQuery);
+
+        $(function () {
+
+            var start = moment().subtract(29, 'days');
+            var end = moment();
+
+            function cb(start, end) {
+                $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+            }
+
+            $('#reportrange').daterangepicker({
+                startDate: start,
+                endDate: end,
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                }
+            }, cb);
+
+            cb(start, end);
+
+        });
+
+        $(function () {
+            $('input[name="datetimes"]').daterangepicker({
+                timePicker: true,
+                startDate: moment().startOf('hour'),
+                endDate: moment().startOf('hour').add(32, 'hour'),
+                locale: {
+                    format: 'M/DD hh:mm A'
+                }
+            });
+        });
+
+
+
+    </script>
+}

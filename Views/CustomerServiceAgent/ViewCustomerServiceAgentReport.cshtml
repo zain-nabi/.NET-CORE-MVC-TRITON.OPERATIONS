@@ -1,0 +1,81 @@
+﻿@model Triton.Operations.Models.CSAViewModel
+<main id="content" role="main" class="main">
+    <div id="loading">
+        @*<i class="fad fa-spinner-third fa-spin fa-3x" style="--fa-primary-color: #EE384E;"></i>*@
+        <div class="alert alert-danger" role="alert">
+            <div class="spinner-border " role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+    </div>
+    <!-- Content -->
+    <div class="content container-fluid">
+        <!-- Page Header -->
+
+        <div class="js-nav-scroller hs-nav-scroller-horizontal mb-5">
+
+            <ul class="nav nav-tabs align-items-center">
+                <li class="col-sm mb-2 mb-sm-0">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb breadcrumb-no-gutter">
+                            <li class="breadcrumb-item"><a class="breadcrumb-link" href="javascript:;">Reports</a></li>
+                            <li class="breadcrumb-item"><a class="breadcrumb-link" href="javascript:;">Customer Agent Report</a></li>
+                        </ol>
+                    </nav>
+
+                    <h1 class="page-header-title">View Report</h1>
+                <li />
+
+
+                <li class="nav-item ml-auto">
+                    <a class="btn btn-sm btn-outline-primary mr-2" href="@Url.Action("Overview", "CustomerServiceAgent")">
+                        Back
+                    </a>
+
+
+
+                </li>
+            </ul>
+        </div>
+
+        <!-- End Row -->
+        <!-- End Page Header -->
+    </div>
+
+
+    <div class="content container-fluid my-n9">
+
+        <div id="editAddressCard" class="card mb-3 mb-lg-5">
+            <div class="card-header">
+                <h5 class="card-title">Report Information</h5>
+                <div class="col-sm-6 d-flex justify-content-end">
+                    <div class="mr-2">
+                        <span class="legend-indicator bg-primary"></span><b class="strong">@Model.FilterDate</b>
+                    </div>
+
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="embed-responsive embed-responsive-1by1">
+                        <iframe class="embed-responsive-item" src="@Model.Url"></iframe>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+@section scripts{
+    <script>
+        $(window).on('load', function () {
+            $('#loading').hide();
+        });
+
+        $(document).on('ready', function () {
+
+        });
+
+    </script>
+}

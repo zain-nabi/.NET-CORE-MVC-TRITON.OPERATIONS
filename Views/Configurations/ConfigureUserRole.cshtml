@@ -1,0 +1,119 @@
+﻿@model Triton.Service.Model.TritonGroup.Custom.UserRoleGroupModel
+
+@{
+    ViewData["Title"] = "Configuration";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+<main id="content" role="main" class="main">
+    <div class="content container-fluid">
+        <!-- Page Header -->
+        <div class="js-nav-scroller hs-nav-scroller-horizontal mb-5">
+            <span class="hs-nav-scroller-arrow-prev" style="display: none;">
+                <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+                    <i class="tio-chevron-left"></i>
+                </a>
+            </span>
+
+            <span class="hs-nav-scroller-arrow-next" style="display: none;">
+                <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+                    <i class="tio-chevron-right"></i>
+                </a>
+            </span>
+
+            <ul class="nav nav-tabs align-items-center">
+                <li class="col-sm mb-2 mb-sm-0">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb breadcrumb-no-gutter">
+                            <li class="breadcrumb-item"><a class="breadcrumb-link" href="javascript:;">CRM</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Configuration</li>
+                        </ol>
+                    </nav>
+
+                    <h1 class="page-header-title">Create</h1>
+                </li>
+
+            </ul>
+
+        </div>
+        <!-- End Page Header -->
+    </div>
+    <div class="content container-fluid my-n9">
+        <div class="js-nav-scroller hs-nav-scroller-horizontal mb-5">
+            <span class="hs-nav-scroller-arrow-prev" style="display: none;">
+                <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+                    <i class="tio-chevron-left"></i>
+                </a>
+            </span>
+
+            <span class="hs-nav-scroller-arrow-next" style="display: none;">
+                <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+                    <i class="tio-chevron-right"></i>
+                </a>
+            </span>
+
+            <ul class="nav nav-tabs align-items-center">
+
+                <li class="nav-item">
+                    <a class="nav-link active" href="@Url.Action("ConfigureUserRole", "Configurations", new {userId = Model.Users.UserID })">UserRoles</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " href="@Url.Action("ConfigureBranches", "Configurations", new {userId = Model.Users.UserID })">Branches</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="content container-fluid my-n9">
+        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>
+                    @Model.ErrorMessage
+
+                </strong>
+
+            </div>
+        }
+        <form class="js-validate" method="post" asp-action="ConfigureUserRole" asp-controller="Configurations">
+            <div class="card">
+                <div class="card-header">
+                    <p class="card-header-title">Create Role Group</p>
+                </div>
+                <div class="card-body">
+
+                    <!-- Input -->
+                    <div class="row form-group">
+                        <label class="col-sm-3 col-form-label input-label">Role Name</label>
+                        <div class="col-sm-4 js-form-message mb-3">
+                            @Html.DropDownListFor(m => m.SelectedRoleGroupId, new SelectList(Model.RoleGroup, "RoleGroupID", "RoleName"), new
+                                            {
+                                                @class = "js-select2-custom custom-select",
+                                                size = "1",
+                                                style = "opacity: 0;"
+                                            })
+                        </div>
+                    </div>
+                    <!-- End Input -->
+                    <div class="w-100"></div>
+                    <!-- End Form -->
+                    @Html.HiddenFor(model => model.Users.UserID)
+                    @Html.HiddenFor(model => model.Users.sAMAccountName)
+
+                </div>
+                <!-- Footer -->
+                <div class="card-footer">
+                    <div class="d-flex justify-content-center align-content-end" style="margin-left: 80px;">
+                        <a class="btn btn-white " href="@Url.Action("UsersSummary", "Users")">Cancel</a>
+                        <input type="submit" value="Save" class="btn btn-primary ml-2" id="btnSave" />
+                    </div>
+
+                </div>
+                <!-- End Footer -->
+            </div>
+        </form>
+
+    </div>
+
+
+</main>

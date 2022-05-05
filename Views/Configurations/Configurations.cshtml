@@ -1,0 +1,170 @@
+﻿@model Triton.Operations.Models.ConfigurationsViewModel
+
+@{
+    ViewData["Title"] = "Configurations";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<main id="content" role="main" class="main">
+    <div class="content container-fluid">
+        <!-- Page Header -->
+        <div class="js-nav-scroller hs-nav-scroller-horizontal mb-5">
+            <span class="hs-nav-scroller-arrow-prev" style="display: none;">
+                <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+                    <i class="tio-chevron-left"></i>
+                </a>
+            </span>
+
+            <span class="hs-nav-scroller-arrow-next" style="display: none;">
+                <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+                    <i class="tio-chevron-right"></i>
+                </a>
+            </span>
+
+            <ul class="nav nav-tabs align-items-center">
+                <li class="col-sm mb-2 mb-sm-0">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb breadcrumb-no-gutter">
+                            <li class="breadcrumb-item"><a class="breadcrumb-link" href="javascript:;">Administrator</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">User Configurations</li>
+                        </ol>
+                    </nav>
+
+                    <h1 class="page-header-title">Update</h1>
+                </li>
+
+            </ul>
+
+        </div>
+        <!-- End Page Header -->
+    </div>
+
+    <div class="content container-fluid my-n9">
+
+        <form class="js-validate" method="post" asp-action="Configurations" asp-controller="Configurations">
+            <div class="card">
+                <div class="card-header">
+                    <p class="card-header-title">Configurations</p>
+                </div>
+                <div class="card-body">
+
+                    <!-- Input -->
+                    <div class="row form-group">
+                        <label class="col-sm-3 col-form-label input-label">Role Name<span class="fas text-danger fa-lg mr-1">*</span></label>
+                        <div class="col-sm-4 js-form-message mb-3">
+                            @Html.DropDownListFor(m => m.UserRoleGroupModel.SelectedRoleGroupId, new SelectList(Model.UserRoleGroupModel.RoleGroup, "RoleGroupID", "RoleName"), new
+                                            {
+                                                @class = "js-select2-custom custom-select",
+                                                size = "1",
+                                                style = "opacity: 0;"
+                                            })
+                        </div>
+                    </div>
+
+                    <!-- Input -->
+                    <div class="row form-group">
+
+                        @if (string.IsNullOrEmpty(@Model.UserBranchModel.BranchIDS))
+                        {
+                            <label class="col-sm-3 col-form-label input-label">Branch<span class="fas text-danger fa-lg mr-1">*</span></label>
+                            <div class="col-sm-4 js-form-message mb-3">
+                                @Html.DropDownListFor(m => m.UserBranchModel.SelectedBranchID, new SelectList(Model.UserBranchModel.Branches, "BranchID", "BranchFullName"), new
+                           {
+                               @id = "Branches",
+                               @class = "js-select2-custom custom-select",
+                               size = "1",
+                               style = "opacity: 0;",
+                               required = "required",
+                               @onchange = "javascript:onBranchesClick()"
+                           })
+                            </div>
+                        }
+                        else
+                        {
+                            <label class="col-sm-3 col-form-label input-label">Branch<span class="fas text-danger fa-lg mr-1">*</span></label>
+                            <div class="col-sm-4 js-form-message mb-3">
+                                <select id="Branches" class="js-select2-custom custom-select" multiple size="1" style="opacity: 0;" required onchange="javascript:onBranchesClick()"
+                                        data-hs-select2-options='{
+                                           "minimumResultsForSearch": "Infinity"
+                                         }'>
+
+                                    @{
+                                        var matched = Model.UserBranchModel.Branches.Where(a => Model.UserBranchModel.UserBranch.Any(x => x.BranchID == a.BranchID));
+                                        var firstDiffSecond = Model.UserBranchModel.Branches.Where(item => !Model.UserBranchModel.UserBranch.Any(e => item.BranchID == e.BranchID));
+
+                                        foreach (var item in matched)
+                                        {
+                                            <option value="@item.BranchID" selected>@item.BranchFullName</option>
+
+                                        }
+                                        foreach (var item in firstDiffSecond)
+                                        {
+                                            <option value="@item.BranchID">@item.BranchFullName</option>
+                                        }
+                                    }
+
+
+                                </select>
+                            </div>
+                        }
+                    </div>
+                   
+                    <!-- End Input -->
+                    <div class="row form-group">
+                        <label class="col-sm-3 col-form-label input-label mr-1"><span class="fas text-danger fa-lg mr-1">*</span><span class="text-muted">indicates required</span></label>
+                    </div>
+                    <!-- End Input -->
+                    <div class="w-100"></div>
+                    <!-- End Form -->
+                    @Html.HiddenFor(model => model.UserRoleGroupModel.Users.UserID)
+                    @Html.HiddenFor(model => model.UserRoleGroupModel.Users.sAMAccountName)
+                    @Html.HiddenFor(model => model.UserBranchModel.Users.sAMAccountName)
+                    @Html.HiddenFor(model => model.UserBranchModel.Users.UserID)
+                    @Html.HiddenFor(model => model.UserRoleGroupModel.SelectedRoleGroupId)
+
+                    <input type="hidden" asp-for="@Model.UserBranchModel.BranchIDS" />
+                    <input type="hidden" id="selectedText" asp-for="@Model.UserBranchModel.EditBranchIDS" />
+                </div>
+                <!-- Footer -->
+                <div class="card-footer">
+                    <div class="d-flex justify-content-center align-content-end" style="margin-left: 80px;">
+                        <a class="btn btn-white " href="@Url.Action("UsersSummary", "Users")">Cancel</a>
+                        <input type="submit" value="Save" class="btn btn-primary ml-2" id="btnSave" />
+                    </div>
+
+                </div>
+                <!-- End Footer -->
+           
+        </form>
+
+    </div>
+
+
+</main>
+@section scripts {
+    <!-- JS Plugins Init. -->
+    <script>
+
+        $(document).on('ready',
+            function () {
+
+                $("#Branches").select2({ multiple: true });
+                onBranchesClick();
+            });
+
+
+
+        function onBranchesClick() {
+            var dataSet = [];
+            var selections = $("#Branches").select2('data');
+            $.each(selections, function (index, value) {
+                dataSet.push(value.id);
+
+            });
+
+            $('#selectedText').val(dataSet);
+        }
+
+    </script>
+
+}

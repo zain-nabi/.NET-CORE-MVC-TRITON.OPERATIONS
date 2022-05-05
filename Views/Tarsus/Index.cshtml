@@ -1,0 +1,76 @@
+﻿@model Triton.Model.CRM.Tables.Waybills
+@{
+    ViewData["Title"] = "Tarsus waybill";
+}
+
+<main id="content" role="main" class="main">
+    <!-- Content -->
+    <div class="content container-fluid">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col-sm mb-2 mb-sm-0">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb breadcrumb-no-gutter">
+                            <li class="breadcrumb-item"><a class="breadcrumb-link" href="#">Waybills</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Search waybill</li>
+                        </ol>
+                    </nav>
+
+                    <h1 class="page-header-title">Search waybill</h1>
+                </div>
+            </div>
+            <!-- End Row -->
+        </div>
+
+
+        <!-- End Page Header -->
+        <div class="content container">
+            <!-- Card -->
+            <div class="card mb-3 mb-lg-5">
+                <!-- Header -->
+                <div class="card-header">
+                    <h4 class="card-header-title">Waybill information</h4>
+                </div>
+                <!-- End Header -->
+                <!-- Body -->
+                <div class="card-body">
+                    <!-- Form Group -->
+                    <form class="js-validate" method="post">
+                        <!-- Input -->
+                        <div class="row mb-3">
+                            <label for="requiredLabel" class="col-md-3 col-form-label input-label text-md-right">Waybill number</label>
+                            <div class="col-md-6 js-form-message">
+                                @Html.TextBoxFor(x => x.WaybillNo, new { @class = "form-control", placeholder = "eg. TA65094359", @required = "required" })
+                                @*<input type="text" asp-for="WaybillNo" class="form-control" id="requiredLabel" name="form-control-required" placeholder="eg. TA65094359" required>*@
+                            </div>
+                        </div>
+                        <!-- End Input -->
+                        <!-- Button Submit -->
+                        <div class="row mb-3">
+                            <div class="col-md-6 offset-md-3">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </div>
+                        <!-- End Button Submit -->
+                    </form>
+
+                </div>
+                <!-- Body -->
+            </div>
+            <!-- End Card -->
+            <!-- End Row -->
+        </div>
+    </div>
+    <!-- End Content -->
+</main>
+
+@section Scripts {
+    <script>
+        // INITIALIZATION OF FORM VALIDATION
+        // =======================================================
+        $('.js-validate').each(function () {
+            $.HSCore.components.HSValidation.init($(this));
+        });
+    </script>
+}

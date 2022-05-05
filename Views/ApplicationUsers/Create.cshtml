@@ -1,0 +1,170 @@
+﻿@model Triton.CRM.Models.ApplicationUserModel
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- ========== MAIN ========== -->
+<main id="content" role="main" class="main">
+    <!-- Content -->
+    <div class="content container-fluid">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="row align-items-end">
+                <div class="col-sm mb-2 mb-sm-0">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb breadcrumb-no-gutter">
+                            <li class="breadcrumb-item"><a class="breadcrumb-link" href="javascript:;">Application Users</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Users</li>
+                        </ol>
+                    </nav>
+
+                    <h1 class="page-header-title">New Application User</h1>
+                </div>
+            </div>
+        </div>
+        <!-- End Page Header -->
+    </div>
+    <!-- End Breadcrumb Section -->
+    <!-- Content Section -->
+    <div class="content container-fluid my-n9">
+        <form class="js-validate" method="post" asp-action="Create" asp-controller="ApplicationUsers">
+            <div class="card">
+                <div class="card-header">
+                    <p class="card-header-title">Update Application User</p>
+                </div>
+                <div class="card-body">
+
+                    <!-- Input -->
+                    <div class="form-group row">
+                        <label for="FullnameLabel" class="col-sm-3 col-form-label input-label">Full Name</label>
+                        <div class="col-sm-9 js-form-message">
+
+                            @Html.TextBoxFor(model => model.Users.Name, new { @class = "form-control textValidation", name = "firstname", placeholder = "Fullname", id = "Fullname" })
+                            <span style="color: #ed4c78;display: none;font-size: 80%;" id="spnError2">Please enter alphabets only</span>
+                        </div>
+                    </div>
+                    <!-- End Input -->
+                    <!-- Input -->
+                    <div class="form-group row">
+                        <label for="UsernameLabel" class="col-sm-3 col-form-label input-label">Username</label>
+                        <div class="col-sm-9 js-form-message">
+                            @if (Model.Username == "True")
+                            {
+                                @Html.TextBoxFor(model => model.Users.UserName, new { @class = "form-control textValidation", name = "username", placeholder = "Username", id = "username" })
+                                <span style="color:#ed4c78;font-size: 80%;" id="CellError">@Model.UserNameErrorMessage</span>
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(model => model.Users.UserName, new { @class = "form-control textValidation", name = "username", placeholder = "Username", id = "username" })
+                            }
+                        </div>
+                    </div>
+                    <!-- End Input -->
+
+                    <div class="w-100"></div>
+
+                    <!-- Input -->
+                    <div class="form-group row">
+                        <label for="EmailLabel" class="col-sm-3 col-form-label input-label">Email Address</label>
+                        <div class="col-sm-9 js-form-message">
+                            @if (Model.EmailAddress == "True")
+                            {
+                                @Html.TextBoxFor(model => model.Users.EmailAddress, new { @class = "form-control emailValidation", name = "emailaddress", placeholder = "Email Address", id = "emailaddress" })
+                                <span style="color:#ed4c78;font-size: 80%;" id="EmailError">@Model.EmailAddressErrorMessage</span>
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(model => model.Users.EmailAddress, new { @class = "form-control emailValidation", name = "emailaddress", placeholder = "Email Address", id = "emailaddress" })
+                            }
+                        </div>
+                    </div>
+                    <!-- End Input -->
+                    <!-- Input -->
+                    <div class="form-group row">
+                        <label for="BranchLabel" class="col-sm-3 col-form-label input-label">Branch</label>
+                        <div class="col-sm-9 js-form-message">
+                            <!-- Select2 -->
+                            <select class="js-select2-custom custom-select" size="1" style="opacity: 0;" asp-for="Users.BranchID" asp-items="@Model.BranchSelectList"
+                                    data-hs-select2-options='{
+                                                        "minimumResultsForSearch": "Infinity",
+                                                        "placeholder": "Select Branch"
+                                                         }'>
+                                <option label="empty"></option>
+                            </select>
+                            <!-- End Select2 -->
+                        </div>
+                    </div>
+                    <!-- End Input -->
+
+                    <div class="form-group row">
+                        <label for="DepartmentLabel" class="col-sm-3 col-form-label input-label">Department</label>
+                        <div class="col-sm-9 js-form-message">
+                            <!-- Select2 -->
+                            <select class="js-select2-custom custom-select" size="1" style="opacity: 0;" asp-for="Users.DepartmentID" asp-items="@Model.DepartmentSelectList"
+                                    data-hs-select2-options='{
+                                                        "minimumResultsForSearch": "Infinity",
+                                                        "placeholder": "Select Department"
+                                                         }'>
+                                <option label="empty"></option>
+                            </select>
+                            <!-- End Select2 -->
+                        </div>
+                    </div>
+                    @Html.HiddenFor(model => model.Users.ManagerID)
+                    @Html.HiddenFor(model => model.Users.IsHeadOffice)
+                    @Html.HiddenFor(model => model.Users.StatusDate)
+                    @Html.HiddenFor(model => model.Users.Archive_User)
+                    @Html.HiddenFor(model => model.Users.StatusID)
+                    <!-- End Form -->
+                </div>
+                <!-- Footer -->
+                <div class="card-footer d-flex justify-content-end">
+                    <a class="btn btn-white" href="@Url.Action("Users", "ApplicationUsers")">Cancel</a>
+                    <input type="submit" value="Save" class="btn btn-primary ml-2" id="btnSave" />
+                </div>
+                <!-- End Footer -->
+            </div>
+        </form>
+    </div>
+    <!-- End Content Section -->
+</main>
+<!-- ========== END MAIN ========== -->
+@section scripts {
+    <!-- JS Plugins Init. -->
+    <script>
+        $(document).on('ready',
+            function () {
+
+                $("#signupform").validate({
+
+                    errorClass: 'invalid-input'
+
+                });
+
+                jQuery.validator.addClassRules('emailValidation',
+                    {
+                        required: true,
+                        email: true,
+                    });
+
+                jQuery.validator.addClassRules('textValidation',
+                    {
+                        required: true,
+                        number: false
+                    });
+            });
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            $("[id*=btnSave]").bind("click", function () {
+                var isValid = false;
+                var regex = /^[a-zA-Z ]*$/;
+                isValid = regex.test($("[id*=Fullname]").val());
+                $("#spnError2").css("display", !isValid ? "block" : "none");
+                return isValid;
+            });
+        });
+    </script>
+}
